@@ -34,12 +34,13 @@
         <activity
             android:name=".activities.MusicPersistentActivity"
             android:exported="false"
+            android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.MusicOverlay"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.MusicActivity"
-            android:configChanges="uiMode|orientation"
+            android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:exported="true"
             android:screenOrientation="portrait"
