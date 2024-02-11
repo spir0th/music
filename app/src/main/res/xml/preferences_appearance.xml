@@ -18,11 +18,6 @@
             app:defaultValue="true"
             app:title="@string/prefs_appearance_player_dynamic_controls"
             app:summary="@string/prefs_appearance_player_dynamic_controls_s" />
-        <CheckBoxPreference
-            app:key="color_extract"
-            app:defaultValue="true"
-            app:title="@string/prefs_appearance_player_color_extract"
-            app:summary="@string/prefs_appearance_player_color_extract_s" />
     </PreferenceCategory>
     <PreferenceCategory
         app:title="@string/prefs_appearance_other">

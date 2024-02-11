@@ -3,15 +3,12 @@ package io.github.spir0th.music.activities
 import android.content.ComponentName
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.SeekBar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -21,10 +18,10 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import androidx.palette.graphics.Palette
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
@@ -51,8 +48,8 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         setContentView(binding.root)
         UiUtils.adjustSystemBarInsetsForView(binding.content, top=true, bottom=true)
 
-        // Register click listeners for player controls / activity callbacks
-        registerControlsClickListener()
+        // Register listeners for player controls / activity callbacks
+        registerControlListeners()
         registerCallbacks()
     }
 
@@ -137,14 +134,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         val cover = MediaUtils.getCoverArtFromUri(this, uri)
 
         if (cover != null) {
-            if (preferences.getBoolean("color_extract", true)) {
-                Palette.from(cover).generate {
-                    val color = it?.getVibrantColor(Color.WHITE)!!
-                    binding.playerSeekbar.progressTintList = ColorStateList.valueOf(color)
-                }
-            } else {
-                binding.playerSeekbar.progressTintList = ColorStateList.valueOf(Color.WHITE)
-            }
             Glide.with(this)
                 .load(cover)
                 .transition(withCrossFade())
@@ -152,17 +141,25 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
             showCoverArt()
         } else {
-            binding.playerSeekbar.progressTintList = ColorStateList.valueOf(Color.WHITE)
             hideCoverArt() // always hide cover art if there is nothing to provide with.
         }
     }
 
     private fun updatePlaybackDurationUI(position: Long? = mediaController?.currentPosition) {
-        binding.playerSeekbar.max = mediaController?.duration?.toInt() ?: 0
-        binding.playerSeekbar.progress = position?.toInt() ?: 0
+        // parse current position into float (pain)
+        val duration = mediaController?.duration!!
+        var positionFloat = position?.plus(0.0f)?.div(duration)!!
+
+        if (positionFloat > 1.0f) {
+            positionFloat = 1.0f
+        } else if (positionFloat < 0.0f) {
+            positionFloat = 0.0f
+        }
+
+        binding.playerSlider.value = positionFloat
 
         // parse current position into text
-        val totalSeconds = position!! / 1000
+        val totalSeconds = position / 1000
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
 
@@ -280,7 +277,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.playerControls.setPadding(0, 0, 0, 0)
     }
 
-    private fun registerControlsClickListener() {
+    private fun registerControlListeners() {
         binding.playerPlayback.setOnClickListener {
             if (mediaController?.isPlaying == true) {
                 mediaController!!.pause()
@@ -294,19 +291,28 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.playerSkipNext.setOnClickListener {
             mediaController?.seekToNext()
         }
-        binding.playerSeekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
+        binding.playerSlider.setLabelFormatter { value ->
+            // copied from updatePlaybackDurationUI
+            val milliseconds = ((value + 0.0) * mediaController!!.duration).toLong()
+            val totalSeconds = milliseconds / 1000
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            if (totalSeconds >= 360) {
+                val hours = totalSeconds / 360
+                "$hours:$minutes:${String.format("%1$02d", seconds)}"
+            }
+
+            "$minutes:${String.format("%1$02d", seconds)}"
+        }
+        binding.playerSlider.addOnSliderTouchListener(object: Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
                 stopDurationLoopHandler()
             }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            override fun onStopTrackingTouch(slider: Slider) {
                 startDurationLoopHandler()
-
-                if (seekBar != null) {
-                    mediaController?.seekTo(seekBar.progress.toLong())
-                }
+                mediaController?.seekTo(((slider.value + 0.0) * mediaController!!.duration).toLong())
             }
         })
     }
