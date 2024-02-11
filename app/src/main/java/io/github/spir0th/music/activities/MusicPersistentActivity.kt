@@ -81,21 +81,49 @@ class MusicPersistentActivity : AppCompatActivity() {
     }
 
     private fun updateMetadataUI(metadata: MediaMetadata? = mediaController?.mediaMetadata) {
-        fetchCoverArt() // Fetch cover art, visibility will be handled by this function.
+        updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
 
-        if (mediaController == null || mediaController!!.mediaItemCount == 0) {
-            binding.playerTitle.text = getString(R.string.app_name)
-            binding.playerCaption.text = getString(R.string.app_author)
-        }
-        if (metadata != null) {
-            binding.playerTitle.text = metadata.title
-            binding.playerCaption.text = metadata.artist
+        if (!metadata?.title.isNullOrEmpty()) {
+            binding.playerTitle.text = metadata?.title
+        } else {
+            // if metadata title is unavailable, we use MediaUtils.getTitleFromContentUri instead
+            // or use the app name and author if getTitleFromUri is also unavailable
+            val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
 
-            if (metadata.title.isNullOrEmpty()) {
-                // if metadata title is unavailable, we use MediaUtils.getTitleFromContentUri instead
-                val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
+            if (uri != null) {
                 binding.playerTitle.text = MediaUtils.getFilenameFromUri(uri)
+                binding.playerCaption.text = String()
+            } else {
+                binding.playerTitle.text = getString(R.string.app_name)
+                binding.playerCaption.text = getString(R.string.app_author)
             }
+        }
+        if (!metadata?.artist.isNullOrEmpty()) {
+            binding.playerCaption.text = metadata?.artist
+        }
+    }
+
+    private fun updateCoverArtUI(uri: Uri? = mediaController?.currentMediaItem?.localConfiguration?.uri) {
+        val cover = MediaUtils.getCoverArtFromUri(this, uri)
+
+        if (cover != null) {
+            if (preferences.getBoolean("color_extract", true)) {
+                Palette.from(cover).generate {
+                    val color = it?.getVibrantColor(Color.WHITE)!!
+                    binding.playerSeekbar.progressTintList = ColorStateList.valueOf(color)
+                }
+            } else {
+                binding.playerSeekbar.progressTintList = ColorStateList.valueOf(Color.WHITE)
+            }
+            Glide.with(this)
+                .load(cover)
+                .transition(withCrossFade())
+                .into(binding.playerCoverArt)
+
+            showCoverArt()
+        } else {
+            binding.playerSeekbar.progressTintList = ColorStateList.valueOf(Color.WHITE)
+            hideCoverArt() // always hide cover art if there is nothing to provide with.
         }
     }
 
@@ -176,30 +204,6 @@ class MusicPersistentActivity : AppCompatActivity() {
         updatePlaybackStateUI()
         updatePlaybackSkipUI()
         updatePlaybackDurationUI()
-    }
-
-    private fun fetchCoverArt(uri: Uri? = mediaController?.currentMediaItem?.localConfiguration?.uri) {
-        val cover = MediaUtils.getCoverArtFromUri(this, uri)
-
-        if (cover != null) {
-            if (preferences.getBoolean("color_extract", true)) {
-                Palette.from(cover).generate {
-                    val color = it?.getVibrantColor(Color.WHITE)!!
-                    binding.playerSeekbar.progressTintList = ColorStateList.valueOf(color)
-                }
-            } else {
-                binding.playerSeekbar.progressTintList = ColorStateList.valueOf(Color.WHITE)
-            }
-            Glide.with(this)
-                .load(cover)
-                .transition(withCrossFade())
-                .into(binding.playerCoverArt)
-
-            showCoverArt()
-        } else {
-            binding.playerSeekbar.progressTintList = ColorStateList.valueOf(Color.WHITE)
-            hideCoverArt() // always hide cover art if there is nothing to provide with.
-        }
     }
 
     private fun startDurationLoopHandler() {
