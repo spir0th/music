@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">Music</string>
+    <string name="app_author">spir0th</string>
+    <!-- Content descriptions -->
+    <string name="content_desc_player_cover_art">Cover art for current media</string>
+    <string name="content_desc_player_skip_previous">Skip to previous media</string>
+    <string name="content_desc_player_playback">Play or pause media</string>
+    <string name="content_desc_player_skip_next">Skip to next media if available</string>
+    <!-- Player strings -->
+    <string name="player_seek_reset">0:00</string>
+    <string name="player_seek_format">%1$d:%2$s</string>
+    <string name="player_seek_format_hrs">%1$d:%2$d:%3$s</string>
+    <string name="player_file_unloaded">No audio file is playing</string>
+    <string name="player_file_error">An unexpected error occurred while trying to play the audio file.</string>
+    <!-- Preference strings -->
+    <string name="settings_title">Settings</string>
+    <string name="prefs_appearance">Appearance</string>
+    <string name="prefs_appearance_player">Player</string>
+    <string name="prefs_appearance_player_dynamic_controls">Dynamic controls</string>
+    <string name="prefs_appearance_player_dynamic_controls_s">Player controls will react to playlist changes and transitions.</string>
+    <string name="prefs_appearance_player_color_extract">Color extraction</string>
+    <string name="prefs_appearance_player_color_extract_s">Colors extracted from cover art are applied in certain player controls.</string>
+    <string name="prefs_appearance_other">Other</string>
+    <string name="prefs_appearance_other_force_dark">Force enable dark mode</string>
+    <string name="prefs_appearance_other_force_dark_s">Enable dark mode without respecting the current device theme. (Requires restart)</string>
+    <string name="prefs_behavior">Behavior</string>
+    <string name="prefs_behavior_playback">Playback</string>
+    <string name="prefs_behavior_playback_use_persistence">Use persistence if available</string>
+    <string name="prefs_behavior_playback_use_persistence_s">Persistent playback enables the use of music queue and plays audio in background.</string>
+    <string name="prefs_behavior_playback_time_get_duration">Time to get duration</string>
+    <string name="prefs_behavior_system">System</string>
+    <string name="prefs_behavior_system_immersive">Immersive mode</string>
+    <string name="prefs_about">About</string>
+    <string name="prefs_about_name">Music</string>
+    <string name="prefs_about_version">Version %1$s</string>
+    <string name="prefs_about_updates">Check for updates</string>
+    <string name="prefs_about_dev">Development</string>
+    <string name="prefs_about_dev_github">GitHub</string>
+    <string name="prefs_about_dev_github_s">View the project on GitHub</string>
+    <string name="prefs_about_dev_github_url">https://github.com/spir0th/music</string>
+    <string name="prefs_about_dev_donate">Donate</string>
+    <string name="prefs_about_dev_donate_s">Support the developer by making coffee!</string>
+    <string name="prefs_about_dev_send_feedback">Send feedback</string>
+    <string name="prefs_experimental">Experimental settings</string>
+    <!-- Feedback strings -->
+    <string name="feedback_title">Feedback</string>
+    <string name="feedback_input_field_caption">Tell us your opinion about this app</string>
+    <string name="feedback_input_field_error_empty">Your feedback should not be empty.</string>
+    <string name="feedback_submit">Submit</string>
+    <string name="feedback_submit_success">Your feedback has been submitted, thanks for your appreciation!</string>
+    <string name="feedback_submit_fail">Something went wrong while submitting your feedback, try again later.</string>
+</resources>

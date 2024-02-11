@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        app:key="name"
+        app:title="@string/app_name"
+        app:summary="@string/prefs_about_version" />
+    <Preference
+        app:enabled="false"
+        app:icon="@drawable/baseline_update_24"
+        app:title="@string/prefs_about_updates" />
+    <PreferenceCategory
+        app:title="@string/prefs_about_dev">
+
+        <Preference
+            app:key="github"
+            app:title="@string/prefs_about_dev_github"
+            app:summary="@string/prefs_about_dev_github_s" />
+        <Preference
+            app:enabled="false"
+            app:title="@string/prefs_about_dev_donate"
+            app:summary="@string/prefs_about_dev_donate_s" />
+        <Preference
+            app:key="feedback"
+            app:icon="@drawable/baseline_feedback_24"
+            app:title="@string/prefs_about_dev_send_feedback">
+
+            <intent
+                android:targetPackage="io.github.spir0th.music"
+                android:targetClass="io.github.spir0th.music.activities.FeedbackActivity" />
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

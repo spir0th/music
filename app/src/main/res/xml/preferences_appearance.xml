@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:title="@string/prefs_appearance_player">
+
+        <CheckBoxPreference
+            app:key="dynamic_player_controls"
+            app:defaultValue="true"
+            app:title="@string/prefs_appearance_player_dynamic_controls"
+            app:summary="@string/prefs_appearance_player_dynamic_controls_s" />
+        <CheckBoxPreference
+            app:key="color_extract"
+            app:defaultValue="true"
+            app:title="@string/prefs_appearance_player_color_extract"
+            app:summary="@string/prefs_appearance_player_color_extract_s" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:title="@string/prefs_appearance_other">
+
+        <SwitchPreferenceCompat
+            app:key="force_dark"
+            app:title="@string/prefs_appearance_other_force_dark"
+            app:summary="@string/prefs_appearance_other_force_dark_s" />
+    </PreferenceCategory>
+</PreferenceScreen>

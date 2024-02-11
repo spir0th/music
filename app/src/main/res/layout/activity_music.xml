@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:paddingStart="32dp"
+        android:paddingEnd="64dp"
+        tools:ignore="UselessParent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/player_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/player_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="@string/app_author"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium" />
+
+        <ImageView
+            android:id="@+id/player_cover_art"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:contentDescription="@string/content_desc_player_cover_art"
+            android:visibility="gone"
+            android:scaleType="fitCenter" />
+
+        <LinearLayout
+            android:id="@+id/player_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:visibility="gone"
+            android:paddingTop="4dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/player_skip_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_desc_player_skip_previous"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_skip_previous_24" />
+
+            <ImageButton
+                android:id="@+id/player_playback"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_desc_player_playback"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_play_arrow_24" />
+
+            <ImageButton
+                android:id="@+id/player_skip_next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_desc_player_skip_next"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_skip_next_24" />
+
+            <SeekBar
+                android:id="@+id/player_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:progressTint="@android:color/white"
+                android:splitTrack="false"
+                android:thumb="@android:color/transparent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/player_seek_position"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/player_seek_reset"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

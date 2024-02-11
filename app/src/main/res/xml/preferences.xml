@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:fragment="io.github.spir0th.music.fragments.AppearanceSettingsFragment"
+        app:title="@string/prefs_appearance" />
+    <Preference
+        app:fragment="io.github.spir0th.music.fragments.BehaviorSettingsFragment"
+        app:title="@string/prefs_behavior" />
+    <Preference
+        app:fragment="io.github.spir0th.music.fragments.AboutFragment"
+        app:title="@string/prefs_about" />
+    <Preference
+        app:key="experimental"
+        app:isPreferenceVisible="false"
+        app:title="@string/prefs_experimental" />
+</PreferenceScreen>
