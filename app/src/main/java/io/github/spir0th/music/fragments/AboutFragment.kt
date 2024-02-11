@@ -31,7 +31,7 @@ class AboutFragment : PreferenceFragmentCompat() {
         github.setOnPreferenceClickListener {
             val cTabsIntent = CustomTabsIntent.Builder().build()
             cTabsIntent.launchUrl(requireActivity(), Uri.parse(getString(R.string.prefs_about_dev_github_url)))
-            return@setOnPreferenceClickListener true
+            true
         }
     }
 
