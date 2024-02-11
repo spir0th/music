@@ -12,8 +12,11 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        DynamicColors.applyToActivitiesIfAvailable(this)
         Log.i(TAG, "${getString(R.string.app_name)} ${BuildConfig.VERSION_CODE}")
+
+        if (preferences.getBoolean("dynamic_colors", true)) {
+            DynamicColors.applyToActivitiesIfAvailable(this)
+        }
     }
 
     companion object {

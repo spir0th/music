@@ -1,16 +1,21 @@
 package io.github.spir0th.music.fragments
 
 import android.os.Bundle
-import androidx.preference.Preference.OnPreferenceChangeListener
+import android.widget.Toast
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
-import io.github.spir0th.music.utils.UiUtils
 
 class AppearanceSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_appearance, rootKey)
+        val dynamicColors = findPreference<SwitchPreferenceCompat>("dynamic_colors")
+
+        dynamicColors?.setOnPreferenceChangeListener { _, _ ->
+            Toast.makeText(requireContext(), R.string.settings_restart, Toast.LENGTH_LONG).show()
+            true
+        }
     }
 
     override fun onStart() {

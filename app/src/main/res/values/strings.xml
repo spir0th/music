@@ -14,7 +14,11 @@
     <string name="player_file_error">An unexpected error occurred while trying to play the audio file.</string>
     <!-- Preference strings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_restart">This setting requires a restart to take effect.</string>
     <string name="prefs_appearance">Appearance</string>
+    <string name="prefs_appearance_app">Application</string>
+    <string name="prefs_appearance_app_dynamic_colors">Dynamic color</string>
+    <string name="prefs_appearance_app_dynamic_colors_s">Match app color scheme with the current wallpaper or through a selected color in the wallpaper picker.</string>
     <string name="prefs_appearance_player">Player</string>
     <string name="prefs_appearance_player_dynamic_controls">Dynamic controls</string>
     <string name="prefs_appearance_player_dynamic_controls_s">Player controls will react to playlist changes and transitions.</string>
