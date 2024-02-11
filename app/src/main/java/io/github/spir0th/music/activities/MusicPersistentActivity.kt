@@ -81,22 +81,21 @@ class MusicPersistentActivity : AppCompatActivity() {
     }
 
     private fun updateMetadataUI(metadata: MediaMetadata? = mediaController?.mediaMetadata) {
-        updateCoverArtUI() // Update cover art, visibility will be handled by this function.
-        Log.v(TAG, "updateMetadataUI has been called, updating metadata")
+        fetchCoverArt() // Fetch cover art, visibility will be handled by this function.
 
-        if (!metadata?.title.isNullOrEmpty()) {
-            binding.playerTitle.text = metadata?.title
+        if (mediaController == null || mediaController!!.mediaItemCount == 0) {
+            binding.playerTitle.text = getString(R.string.app_name)
             binding.playerCaption.text = getString(R.string.app_author)
-        } else {
-            // if metadata title is unavailable, we use MediaUtils.getTitleFromContentUri instead
-            val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
-            Log.v(TAG, "Metadata is unavailable, at least use getTitleFromContentUri: $uri")
-            binding.playerTitle.text = MediaUtils.getFilenameFromUri(uri)
         }
-        if (!metadata?.artist.isNullOrEmpty()) {
-            binding.playerCaption.text = metadata?.artist
-        } else {
-            binding.playerCaption.text = String()
+        if (metadata != null) {
+            binding.playerTitle.text = metadata.title
+            binding.playerCaption.text = metadata.artist
+
+            if (metadata.title.isNullOrEmpty()) {
+                // if metadata title is unavailable, we use MediaUtils.getTitleFromContentUri instead
+                val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
+                binding.playerTitle.text = MediaUtils.getFilenameFromUri(uri)
+            }
         }
     }
 
@@ -179,7 +178,7 @@ class MusicPersistentActivity : AppCompatActivity() {
         updatePlaybackDurationUI()
     }
 
-    private fun updateCoverArtUI(uri: Uri? = mediaController?.currentMediaItem?.localConfiguration?.uri) {
+    private fun fetchCoverArt(uri: Uri? = mediaController?.currentMediaItem?.localConfiguration?.uri) {
         val cover = MediaUtils.getCoverArtFromUri(this, uri)
 
         if (cover != null) {
