@@ -8,9 +8,9 @@ import androidx.preference.PreferenceFragmentCompat
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
 
-class BehaviorSettingsFragment : PreferenceFragmentCompat() {
+class AudioSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences_behavior, rootKey)
+        setPreferencesFromResource(R.xml.preferences_audio, rootKey)
         val timeGetDuration = findPreference<EditTextPreference>("time_get_duration")
 
         timeGetDuration?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
@@ -19,7 +19,7 @@ class BehaviorSettingsFragment : PreferenceFragmentCompat() {
                 return@OnPreferenceChangeListener false
             }
 
-            return@OnPreferenceChangeListener true
+            true
         }
         timeGetDuration?.summaryProvider = Preference.SummaryProvider<EditTextPreference> {
             val text = it.text
@@ -40,7 +40,7 @@ class BehaviorSettingsFragment : PreferenceFragmentCompat() {
 
         if (requireActivity() is SettingsActivity) {
             val activity = requireActivity() as SettingsActivity
-            activity.supportActionBar?.title = getString(R.string.prefs_behavior)
+            activity.supportActionBar?.title = getString(R.string.prefs_audio)
         }
     }
 }

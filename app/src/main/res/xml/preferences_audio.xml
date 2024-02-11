@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:title="@string/prefs_audio_playback">
+
+        <CheckBoxPreference
+            app:key="use_persistence"
+            app:defaultValue="true"
+            app:title="@string/prefs_audio_playback_use_persistence"
+            app:summary="@string/prefs_audio_playback_use_persistence_s" />
+        <EditTextPreference
+            app:key="time_get_duration"
+            app:defaultValue="1000"
+            app:title="@string/prefs_audio_playback_time_get_duration" />
+    </PreferenceCategory>
+</PreferenceScreen>

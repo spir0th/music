@@ -6,8 +6,8 @@
         app:fragment="io.github.spir0th.music.fragments.AppearanceSettingsFragment"
         app:title="@string/prefs_appearance" />
     <Preference
-        app:fragment="io.github.spir0th.music.fragments.BehaviorSettingsFragment"
-        app:title="@string/prefs_behavior" />
+        app:fragment="io.github.spir0th.music.fragments.AudioSettingsFragment"
+        app:title="@string/prefs_audio" />
     <Preference
         app:fragment="io.github.spir0th.music.fragments.AboutFragment"
         app:title="@string/prefs_about" />
