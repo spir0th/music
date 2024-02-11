@@ -11,10 +11,13 @@ import java.io.File
 
 object MediaUtils {
     @JvmStatic fun generateMediaCache(context: Context, uri: Uri?): Uri {
-        val dir = File(context.cacheDir.path, "media")
+        val dir = File(context.cacheDir.path, "audio")
+        val noMedia = File(dir, ".nomedia")
         val original = context.contentResolver.openInputStream(uri!!)!!
         val cached = uri.lastPathSegment?.let { File(dir, it) }!!
+
         dir.mkdirs()
+        noMedia.createNewFile()
 
         original.use { input ->
             cached.outputStream().use { output ->
@@ -27,7 +30,7 @@ object MediaUtils {
     }
 
     @JvmStatic fun cleanMediaCache(context: Context) {
-        File(context.cacheDir, "media").deleteRecursively()
+        File(context.cacheDir, "audio").deleteRecursively()
     }
 
     @SuppressLint("Range")
