@@ -6,7 +6,7 @@ import androidx.media3.common.AudioAttributes
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
-import io.github.spir0th.music.activities.MusicPersistentActivity
+import io.github.spir0th.music.activities.MusicActivity
 
 class PlaybackService : MediaSessionService() {
     private var mediaSession: MediaSession? = null
@@ -44,7 +44,7 @@ class PlaybackService : MediaSessionService() {
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
 
     private fun createPendingIntentForActivity(): PendingIntent {
-        val intent = Intent(this, MusicPersistentActivity::class.java)
+        val intent = Intent(this, MusicActivity::class.java)
         return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 }

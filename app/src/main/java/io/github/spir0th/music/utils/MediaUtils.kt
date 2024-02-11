@@ -6,8 +6,30 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import androidx.core.net.toUri
+import java.io.File
 
 object MediaUtils {
+    @JvmStatic fun generateMediaCache(context: Context, uri: Uri?): Uri {
+        val dir = File(context.cacheDir.path, "media")
+        val original = context.contentResolver.openInputStream(uri!!)!!
+        val cached = uri.lastPathSegment?.let { File(dir, it) }!!
+        dir.mkdirs()
+
+        original.use { input ->
+            cached.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        original.close()
+        return cached.toUri()
+    }
+
+    @JvmStatic fun cleanMediaCache(context: Context) {
+        File(context.cacheDir, "media").deleteRecursively()
+    }
+
     @SuppressLint("Range")
     @JvmStatic fun getFilenameFromUri(uri: Uri?): String? {
         return uri?.lastPathSegment

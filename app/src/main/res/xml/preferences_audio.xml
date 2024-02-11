@@ -4,11 +4,6 @@
     <PreferenceCategory
         app:title="@string/prefs_audio_playback">
 
-        <CheckBoxPreference
-            app:key="use_persistence"
-            app:defaultValue="true"
-            app:title="@string/prefs_audio_playback_use_persistence"
-            app:summary="@string/prefs_audio_playback_use_persistence_s" />
         <EditTextPreference
             app:key="time_get_duration"
             app:defaultValue="1000"

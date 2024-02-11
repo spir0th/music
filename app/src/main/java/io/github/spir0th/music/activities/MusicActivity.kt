@@ -1,11 +1,10 @@
 package io.github.spir0th.music.activities
 
+import android.content.ComponentName
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -13,26 +12,33 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import androidx.palette.graphics.Palette
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.google.android.material.snackbar.Snackbar
+import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityMusicBinding
+import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.MediaUtils
 import io.github.spir0th.music.utils.UiUtils
 
-class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+class MusicActivity : AppCompatActivity(), Player.Listener {
     private lateinit var binding: ActivityMusicBinding
     private lateinit var preferences: SharedPreferences
-    private val loopHandler: Handler? = Looper.myLooper()?.let { Handler(it) }
-    private var loopRunnable: Runnable? = null
-    private var audioUri: Uri? = null
-    private var player: MediaPlayer? = null
+    private val durationLoopHandler: Handler? = Looper.myLooper()?.let { Handler(it) }
+    private var durationLoopRunnable: Runnable? = null
+    private var mediaController: MediaController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -48,54 +54,86 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPla
         // Register click listeners for player controls / activity callbacks
         registerControlsClickListener()
         registerCallbacks()
-
-        // Initialize media player and handle incoming intents
-        initializePlayer()
-        handleIncomingIntents()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        destroyPlayer()
+    override fun onStart() {
+        super.onStart()
+        val sessionToken = SessionToken(this, ComponentName(this, PlaybackService::class.java))
+        val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
+
+        controllerFuture.addListener({
+            mediaController = controllerFuture.get()
+            mediaController?.addListener(this)
+            binding.playerControls.visibility = View.VISIBLE
+            doCleanupBeforeService()
+            updateFromServiceIfLoaded()
+            handleIncomingIntents()
+                                     },
+            MoreExecutors.directExecutor()
+        )
     }
 
-    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-        exitPlayerFromError()
-        return true
+    override fun onStop() {
+        super.onStop()
+        mediaController?.removeListener(this)
+        mediaController?.release()
     }
 
-    override fun onPrepared(mp: MediaPlayer?) {
+    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+        super.onMediaItemTransition(mediaItem, reason)
+        intent?.data = mediaItem?.localConfiguration?.uri
         binding.playerControls.visibility = View.VISIBLE
-        fetchCoverArt(audioUri)
-        fetchMetadata(audioUri)
-        startLoopHandler()
-        mp?.start()
+        updatePlaybackSkipUI()
     }
 
-    private fun initializePlayer() {
-        player = MediaPlayer().apply {
-            setAudioAttributes(AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build())
+    override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+        super.onMediaMetadataChanged(mediaMetadata)
+        updateMetadataUI(mediaMetadata)
+    }
+
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        super.onIsPlayingChanged(isPlaying)
+        updatePlaybackStateUI(isPlaying)
+    }
+
+    override fun onPlayerError(error: PlaybackException) {
+        super.onPlayerError(error)
+        Snackbar.make(binding.root, R.string.player_file_error, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun onPositionDiscontinuity(
+        oldPosition: Player.PositionInfo,
+        newPosition: Player.PositionInfo,
+        reason: Int
+    ) {
+        super.onPositionDiscontinuity(oldPosition, newPosition, reason)
+        updatePlaybackDurationUI(newPosition.positionMs)
+    }
+
+    private fun updateMetadataUI(metadata: MediaMetadata? = mediaController?.mediaMetadata) {
+        updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
+
+        if (!metadata?.title.isNullOrEmpty()) {
+            binding.playerTitle.text = metadata?.title
+        } else {
+            // if metadata title is unavailable, we use MediaUtils.getTitleFromContentUri instead
+            // or use the app name and author if getTitleFromUri is also unavailable
+            val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
+
+            if (uri != null) {
+                binding.playerTitle.text = MediaUtils.getFilenameFromUri(uri)
+                binding.playerCaption.text = String()
+            } else {
+                binding.playerTitle.text = getString(R.string.app_name)
+                binding.playerCaption.text = getString(R.string.app_author)
+            }
         }
-
-        player?.setOnErrorListener(this)
-        player?.setOnPreparedListener(this)
+        if (!metadata?.artist.isNullOrEmpty()) {
+            binding.playerCaption.text = metadata?.artist
+        }
     }
 
-    private fun destroyPlayer() {
-        stopLoopHandler()
-        player?.release()
-        player = null
-    }
-
-    private fun exitPlayerFromError() {
-        Toast.makeText(applicationContext, R.string.player_file_error, Toast.LENGTH_LONG).show()
-        finish()
-    }
-
-    private fun fetchCoverArt(uri: Uri?) {
+    private fun updateCoverArtUI(uri: Uri? = mediaController?.currentMediaItem?.localConfiguration?.uri) {
         val cover = MediaUtils.getCoverArtFromUri(this, uri)
 
         if (cover != null) {
@@ -109,7 +147,7 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPla
             }
             Glide.with(this)
                 .load(cover)
-                .transition(DrawableTransitionOptions.withCrossFade())
+                .transition(withCrossFade())
                 .into(binding.playerCoverArt)
 
             showCoverArt()
@@ -119,17 +157,12 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPla
         }
     }
 
-    private fun fetchMetadata(uri: Uri?) {
-        binding.playerTitle.text = MediaUtils.getTitleFromUri(this, uri)
-        binding.playerCaption.text = MediaUtils.getArtistFromUri(this, uri)
-    }
-
-    private fun updatePlaybackDurationUI() {
-        binding.playerSeekbar.max = player?.duration ?: 0
-        binding.playerSeekbar.progress = player?.currentPosition ?: 0
+    private fun updatePlaybackDurationUI(position: Long? = mediaController?.currentPosition) {
+        binding.playerSeekbar.max = mediaController?.duration?.toInt() ?: 0
+        binding.playerSeekbar.progress = position?.toInt() ?: 0
 
         // parse current position into text
-        val totalSeconds = player?.currentPosition!! / 1000
+        val totalSeconds = position!! / 1000
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
 
@@ -142,21 +175,32 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPla
     }
 
     private fun updatePlaybackSkipUI() {
-        // Always disable player skip controls
-        binding.playerSkipPrevious.visibility = View.GONE
-        binding.playerSkipNext.visibility = View.GONE
+        if (!preferences.getBoolean("dynamic_player_controls", true)) {
+            binding.playerSkipNext.visibility = View.VISIBLE
+            return
+        }
+        if (mediaController?.hasNextMediaItem() == true) {
+            binding.playerSkipNext.visibility = View.VISIBLE
+        } else {
+            binding.playerSkipNext.visibility = View.GONE
+        }
     }
 
-    private fun updatePlaybackStateUI() {
-        val drawable: Int = if (player?.isPlaying == true) {
-            Log.v(MusicPersistentActivity.TAG, "PlaybackState set to STATE_PLAYING")
+    private fun updatePlaybackStateUI(isPlaying: Boolean = mediaController?.isPlaying == true) {
+        val drawable: Int = if (isPlaying) {
+            Log.v(TAG, "PlaybackState set to STATE_PLAYING")
             R.drawable.baseline_pause_24
         } else {
-            Log.v(MusicPersistentActivity.TAG, "PlaybackState set to STATE_PAUSED")
+            Log.v(TAG, "PlaybackState set to STATE_PAUSED")
             R.drawable.baseline_play_arrow_24
         }
+        if (isPlaying) {
+            startDurationLoopHandler()
+        } else {
+            stopDurationLoopHandler()
+        }
 
-        Glide.with(this).load(drawable).into(binding.playerPlayback)
+        Glide.with(this@MusicActivity).load(drawable).into(binding.playerPlayback)
     }
 
     private fun handleIncomingIntents() {
@@ -164,26 +208,22 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPla
             Intent.ACTION_VIEW -> {
                 if (intent.type?.startsWith("audio/") == true) {
                     intent?.data?.let {
-                        if (intent.flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION == Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION &&
-                            preferences.getBoolean("use_persistence", true)) {
-                            // Let MusicPersistentActivity handle intents with persistable URIs
-                            // (Make sure persistence playback is enabled)
-                            val newIntent = intent!!.apply {
-                                setClass(this@MusicActivity, MusicPersistentActivity::class.java)
-                            }
+                        var item = MediaItem.fromUri(it)
 
-                            startActivity(newIntent)
-                            finish()
+                        if (intent.flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION != Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION) {
+                            // If the intent flags doesn't have FLAG_GRANT_PERSISTABLE_URI_PERMISSION set
+                            // that means the audio content will be temporary and we'll be copying it to our
+                            // cache directory so that it can be played without permission issues.
+                            item = MediaItem.fromUri(MediaUtils.generateMediaCache(this, it))
+                        }
+                        if (mediaController?.currentMediaItem != item) {
+                            Log.i(TAG, "Playing audio from incoming persistent intent data: ${item.localConfiguration?.uri}")
+                            mediaController?.stop()
+                            mediaController?.addMediaItem(item)
+                            mediaController?.seekTo(mediaController!!.mediaItemCount - 1, 0)
+                            mediaController?.play()
                         } else {
-                            Log.i(TAG, "Playing audio from incoming intent data: $it")
-                            audioUri = it
-                            player?.setDataSource(this@MusicActivity, it)
-
-                            try {
-                                player?.prepareAsync()
-                            } catch (_: IllegalStateException) {
-                                exitPlayerFromError()
-                            }
+                            Log.w(TAG, "Incoming intent data received but is already added into queue.")
                         }
                     }
                 }
@@ -191,19 +231,40 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPla
         }
     }
 
-    private fun startLoopHandler() {
-        loopRunnable = Runnable {
-            updatePlaybackDurationUI()
-            updatePlaybackSkipUI()
-            updatePlaybackStateUI()
-            loopRunnable?.let { loopHandler?.post(it) }
+    private fun updateFromServiceIfLoaded() {
+        if (mediaController?.currentMediaItem == null) {
+            return
         }
 
-        loopRunnable?.let { loopHandler?.post(it) }
+        Log.i(TAG, "Started update from service if loaded")
+        updateMetadataUI()
+        updatePlaybackStateUI()
+        updatePlaybackSkipUI()
+        updatePlaybackDurationUI()
     }
 
-    private fun stopLoopHandler() {
-        loopRunnable?.let { loopHandler?.removeCallbacks(it) }
+    private fun doCleanupBeforeService() {
+        if (mediaController?.mediaItemCount != 0) {
+            return
+        }
+
+        Log.i(TAG, "Cleaning up media files on the cache directory")
+        MediaUtils.cleanMediaCache(this)
+    }
+
+    private fun startDurationLoopHandler() {
+        val delayMs = preferences.getString("time_get_duration", "0")!!.toLong()
+
+        durationLoopRunnable = Runnable {
+            updatePlaybackDurationUI()
+            durationLoopRunnable?.let { durationLoopHandler?.postDelayed(it, delayMs) }
+        }
+
+        durationLoopRunnable?.let { durationLoopHandler?.post(it) }
+    }
+
+    private fun stopDurationLoopHandler() {
+        durationLoopRunnable?.let { durationLoopHandler?.removeCallbacks(it) }
     }
 
     private fun showCoverArt() {
@@ -220,22 +281,31 @@ class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPla
 
     private fun registerControlsClickListener() {
         binding.playerPlayback.setOnClickListener {
-            if (player?.isPlaying == false) {
-                player?.start()
+            if (mediaController?.isPlaying == true) {
+                mediaController!!.pause()
             } else {
-                player?.pause()
+                mediaController?.play()
             }
+        }
+        binding.playerSkipPrevious.setOnClickListener {
+            mediaController?.seekToPrevious()
+        }
+        binding.playerSkipNext.setOnClickListener {
+            mediaController?.seekToNext()
         }
         binding.playerSeekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                stopLoopHandler()
+                stopDurationLoopHandler()
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                startLoopHandler()
-                seekBar?.progress?.let { player?.seekTo(it) }
+                startDurationLoopHandler()
+
+                if (seekBar != null) {
+                    mediaController?.seekTo(seekBar.progress.toLong())
+                }
             }
         })
     }
