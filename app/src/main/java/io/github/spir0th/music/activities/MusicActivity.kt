@@ -214,10 +214,11 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                             // If the intent flags doesn't have FLAG_GRANT_PERSISTABLE_URI_PERMISSION set
                             // that means the audio content will be temporary and we'll be copying it to our
                             // cache directory so that it can be played without permission issues.
-                            item = MediaItem.fromUri(MediaUtils.generateMediaCache(this, it))
+                            Log.w(TAG, "Uri $it does not have persistence, making it persistent")
+                            item = MediaItem.fromUri(MediaUtils.generateMediaPersistence(this, it))
                         }
                         if (mediaController?.currentMediaItem != item) {
-                            Log.i(TAG, "Playing audio from incoming persistent intent data: ${item.localConfiguration?.uri}")
+                            Log.i(TAG, "Playing audio from incoming intent data: ${item.localConfiguration?.uri}")
                             mediaController?.stop()
                             mediaController?.addMediaItem(item)
                             mediaController?.seekTo(mediaController!!.mediaItemCount - 1, 0)
@@ -248,8 +249,8 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             return
         }
 
-        Log.i(TAG, "Cleaning up media files on the cache directory")
-        MediaUtils.cleanMediaCache(this)
+        Log.i(TAG, "Cleaning up audio persistence")
+        MediaUtils.cleanMediaPersists(this)
     }
 
     private fun startDurationLoopHandler() {

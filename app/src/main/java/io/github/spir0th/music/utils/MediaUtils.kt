@@ -10,8 +10,8 @@ import androidx.core.net.toUri
 import java.io.File
 
 object MediaUtils {
-    @JvmStatic fun generateMediaCache(context: Context, uri: Uri?): Uri {
-        val dir = File(context.cacheDir.path, "audio")
+    @JvmStatic fun generateMediaPersistence(context: Context, uri: Uri?): Uri {
+        val dir = File(context.dataDir, "persistence")
         val noMedia = File(dir, ".nomedia")
         val original = context.contentResolver.openInputStream(uri!!)!!
         val cached = uri.lastPathSegment?.let { File(dir, it) }!!
@@ -29,8 +29,8 @@ object MediaUtils {
         return cached.toUri()
     }
 
-    @JvmStatic fun cleanMediaCache(context: Context) {
-        File(context.cacheDir, "audio").deleteRecursively()
+    @JvmStatic fun cleanMediaPersists(context: Context) {
+        File(context.dataDir, "persistence").deleteRecursively()
     }
 
     @SuppressLint("Range")
