@@ -39,7 +39,6 @@ class MusicPersistentActivity : AppCompatActivity(), Player.Listener {
     private val durationLoopHandler: Handler? = Looper.myLooper()?.let { Handler(it) }
     private var durationLoopRunnable: Runnable? = null
     private var mediaController: MediaController? = null
-    private var mediaListener: Player.Listener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
