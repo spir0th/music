@@ -21,7 +21,8 @@
 
         <activity
             android:name=".activities.SettingsActivity"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/AppTheme.Preference">
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
 

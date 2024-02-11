@@ -15,8 +15,7 @@
 
         <Preference
             app:key="github"
-            app:title="@string/prefs_about_dev_github"
-            app:summary="@string/prefs_about_dev_github_s" />
+            app:title="@string/prefs_about_dev_github" />
         <Preference
             app:enabled="false"
             app:title="@string/prefs_about_dev_donate"

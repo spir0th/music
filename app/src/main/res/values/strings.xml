@@ -37,7 +37,6 @@
     <string name="prefs_about_updates">Check for updates</string>
     <string name="prefs_about_dev">Development</string>
     <string name="prefs_about_dev_github">GitHub</string>
-    <string name="prefs_about_dev_github_s">View the project on GitHub</string>
     <string name="prefs_about_dev_github_url">https://github.com/spir0th/music</string>
     <string name="prefs_about_dev_donate">Donate</string>
     <string name="prefs_about_dev_donate_s">Support the developer by making coffee!</string>

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <!-- Own color palette -->
         <item name="colorPrimary">@color/md_theme_light_primary</item>
@@ -29,6 +29,11 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
     </style>
 
+    <style name="AppTheme.Preference" parent="AppTheme">
+        <item name="alertDialogTheme">@style/AppTheme.Material3.Dialog</item>
+        <item name="preferenceTheme">@style/AppTheme.ThemeOverlay.Preference</item>
+    </style>
+
     <style name="AppTheme.MusicOverlay" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Overlay values -->
         <item name="android:background">@android:color/transparent</item>
@@ -39,5 +44,9 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="AppTheme.ThemeOverlay.Preference" parent="PreferenceThemeOverlay">
+        <item name="switchPreferenceCompatStyle">@style/AppTheme.Material3.SwitchPreferenceCompat</item>
     </style>
 </resources>
