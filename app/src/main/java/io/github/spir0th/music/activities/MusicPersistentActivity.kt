@@ -33,7 +33,7 @@ import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.MediaUtils
 import io.github.spir0th.music.utils.UiUtils
 
-class MusicPersistentActivity : AppCompatActivity() {
+class MusicPersistentActivity : AppCompatActivity(), Player.Listener {
     private lateinit var binding: ActivityMusicBinding
     private lateinit var preferences: SharedPreferences
     private val durationLoopHandler: Handler? = Looper.myLooper()?.let { Handler(it) }
@@ -64,9 +64,9 @@ class MusicPersistentActivity : AppCompatActivity() {
 
         controllerFuture.addListener({
             mediaController = controllerFuture.get()
+            mediaController?.addListener(this)
             binding.playerControls.visibility = View.VISIBLE
             updateFromMediaIfLoaded()
-            registerControllerListener()
             handleIncomingIntents()
                                      },
             MoreExecutors.directExecutor()
@@ -75,8 +75,39 @@ class MusicPersistentActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        unregisterControllerListener()
+        mediaController?.removeListener(this)
         mediaController?.release()
+    }
+
+    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+        super.onMediaItemTransition(mediaItem, reason)
+        intent?.data = mediaItem?.localConfiguration?.uri
+        binding.playerControls.visibility = View.VISIBLE
+        updatePlaybackSkipUI()
+    }
+
+    override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+        super.onMediaMetadataChanged(mediaMetadata)
+        updateMetadataUI(mediaMetadata)
+    }
+
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        super.onIsPlayingChanged(isPlaying)
+        updatePlaybackStateUI(isPlaying)
+    }
+
+    override fun onPlayerError(error: PlaybackException) {
+        super.onPlayerError(error)
+        Snackbar.make(binding.root, R.string.player_file_error, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun onPositionDiscontinuity(
+        oldPosition: Player.PositionInfo,
+        newPosition: Player.PositionInfo,
+        reason: Int
+    ) {
+        super.onPositionDiscontinuity(oldPosition, newPosition, reason)
+        updatePlaybackDurationUI(newPosition.positionMs)
     }
 
     private fun updateMetadataUI(metadata: MediaMetadata? = mediaController?.mediaMetadata) {
@@ -230,47 +261,6 @@ class MusicPersistentActivity : AppCompatActivity() {
         binding.playerCoverArt.visibility = View.GONE
         binding.playerCaption.setPadding(0, 0, 0, 0)
         binding.playerControls.setPadding(0, 0, 0, 0)
-    }
-
-    private fun registerControllerListener() {
-        mediaListener = object: Player.Listener {
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                super.onMediaItemTransition(mediaItem, reason)
-                intent?.data = mediaItem?.localConfiguration?.uri
-                binding.playerControls.visibility = View.VISIBLE
-                updatePlaybackSkipUI()
-            }
-
-            override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                super.onMediaMetadataChanged(mediaMetadata)
-                updateMetadataUI(mediaMetadata)
-            }
-
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                super.onIsPlayingChanged(isPlaying)
-                updatePlaybackStateUI(isPlaying)
-            }
-
-            override fun onPlayerError(error: PlaybackException) {
-                super.onPlayerError(error)
-                Snackbar.make(binding.root, R.string.player_file_error, Snackbar.LENGTH_LONG).show()
-            }
-
-            override fun onPositionDiscontinuity(
-                oldPosition: Player.PositionInfo,
-                newPosition: Player.PositionInfo,
-                reason: Int
-            ) {
-                super.onPositionDiscontinuity(oldPosition, newPosition, reason)
-                updatePlaybackDurationUI(newPosition.positionMs)
-            }
-        }
-
-        mediaController?.addListener(mediaListener as Player.Listener)
-    }
-
-    private fun unregisterControllerListener() {
-        mediaListener?.let { mediaController?.removeListener(it) }
     }
 
     private fun registerControlsClickListener() {

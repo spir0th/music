@@ -26,7 +26,7 @@ import io.github.spir0th.music.databinding.ActivityMusicBinding
 import io.github.spir0th.music.utils.MediaUtils
 import io.github.spir0th.music.utils.UiUtils
 
-class MusicActivity : AppCompatActivity() {
+class MusicActivity : AppCompatActivity(), MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
     private lateinit var binding: ActivityMusicBinding
     private lateinit var preferences: SharedPreferences
     private val loopHandler: Handler? = Looper.myLooper()?.let { Handler(it) }
@@ -59,6 +59,19 @@ class MusicActivity : AppCompatActivity() {
         destroyPlayer()
     }
 
+    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        exitPlayerFromError()
+        return true
+    }
+
+    override fun onPrepared(mp: MediaPlayer?) {
+        binding.playerControls.visibility = View.VISIBLE
+        fetchCoverArt(audioUri)
+        fetchMetadata(audioUri)
+        startLoopHandler()
+        mp?.start()
+    }
+
     private fun initializePlayer() {
         player = MediaPlayer().apply {
             setAudioAttributes(AudioAttributes.Builder()
@@ -66,17 +79,9 @@ class MusicActivity : AppCompatActivity() {
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build())
         }
-        player?.setOnErrorListener { _, _, _ ->
-            exitPlayerFromError()
-            return@setOnErrorListener true
-        }
-        player?.setOnPreparedListener {
-            binding.playerControls.visibility = View.VISIBLE
-            fetchCoverArt(audioUri)
-            fetchMetadata(audioUri)
-            startLoopHandler()
-            it.start()
-        }
+
+        player?.setOnErrorListener(this)
+        player?.setOnPreparedListener(this)
     }
 
     private fun destroyPlayer() {
