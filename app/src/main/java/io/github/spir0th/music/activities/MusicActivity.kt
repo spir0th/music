@@ -3,7 +3,7 @@ package io.github.spir0th.music.activities
 import android.content.ComponentName
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -130,12 +130,12 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
-    private fun updateCoverArtUI(uri: Uri? = mediaController?.currentMediaItem?.localConfiguration?.uri) {
-        val cover = MediaUtils.getCoverArtFromUri(this, uri)
+    private fun updateCoverArtUI(artworkData: ByteArray? = mediaController?.mediaMetadata?.artworkData) {
+        val bitmap = BitmapFactory.decodeByteArray(artworkData, 0, artworkData!!.size)
 
-        if (cover != null) {
+        if (bitmap != null) {
             Glide.with(this)
-                .load(cover)
+                .load(bitmap)
                 .transition(withCrossFade())
                 .into(binding.playerCoverArt)
 
