@@ -3,6 +3,7 @@ package io.github.spir0th.music.activities
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -109,7 +110,13 @@ class FeedbackActivity : AppCompatActivity() {
         return outputBuilder.toString()
     }
 
+    @Suppress("KotlinConstantConditions")
     private fun initializeSupabase() {
+        if (BuildConfig.supabaseApiKey == "null") {
+            Toast.makeText(this, R.string.feedback_supabase_key_not_provided, Toast.LENGTH_LONG).show()
+            onBackPressedDispatcher.onBackPressed()
+            return
+        }
         supabaseClient = createSupabaseClient(
             "https://ljauujzzqitfprkpuuxk.supabase.co",
             BuildConfig.supabaseApiKey) {

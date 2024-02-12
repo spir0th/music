@@ -8,15 +8,16 @@ To be added soon
 Built APKs are uploaded in [GitHub Releases](https://github.com/spir0th/music/releases/latest).
 
 ## Building
-### Feedback API key (optional)
-The feedback feature needs a Supabase project created and it's API key set.
-
-This section might be optional, but if you don't tend to use your own API key,
-the feedback feature may not work properly and crash the application as intended.
-
-Or, if you really care about feedbacks and prevent it from crashing, define it in `local.properties`:
+### Feedback API key
+The feedback feature requires an API key of a Supabase project to be set in order to upload
+feedbacks. To disable it, put this on your `local.properties` file:
 ```
-supabase.apiKey=<API KEY HERE>
+supabase.ApiKey=null
+```
+
+Or, if you want to enable feedbacks, create a Supabase project then put it's API key like this:
+```
+supabase.ApiKey=<YOUR API KEY>
 ```
 
 ### Android Studio
