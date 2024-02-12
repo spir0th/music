@@ -28,6 +28,7 @@ import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityMusicBinding
 import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.MediaUtils
+import io.github.spir0th.music.utils.TimeUtils
 import io.github.spir0th.music.utils.UiUtils
 
 class MusicActivity : AppCompatActivity(), Player.Listener {
@@ -159,12 +160,12 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.playerSlider.value = positionFloat
 
         // parse current position into text
-        val totalSeconds = position / 1000
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
+        val microseconds = TimeUtils.convertMillisecondsToMicroseconds(position)
+        val minutes = TimeUtils.convertMicrosecondsToMinutes(microseconds)
+        val seconds = TimeUtils.convertMicrosecondsToSeconds(microseconds)
 
-        if (totalSeconds >= 360) {
-            val hours = totalSeconds / 360
+        if (microseconds >= 360) {
+            val hours = TimeUtils.convertMicrosecondsToHours(microseconds)
             binding.playerSeekPosition.text = getString(R.string.player_seek_format_hrs, hours, minutes, String.format("%1$02d", seconds))
         } else {
             binding.playerSeekPosition.text = getString(R.string.player_seek_format, minutes, String.format("%1$02d", seconds))
@@ -294,12 +295,12 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.playerSlider.setLabelFormatter { value ->
             // copied from updatePlaybackDurationUI
             val milliseconds = ((value + 0.0) * mediaController!!.duration).toLong()
-            val totalSeconds = milliseconds / 1000
-            val minutes = totalSeconds / 60
-            val seconds = totalSeconds % 60
+            val microseconds = TimeUtils.convertMillisecondsToMicroseconds(milliseconds)
+            val minutes = TimeUtils.convertMicrosecondsToMinutes(microseconds)
+            val seconds = TimeUtils.convertMicrosecondsToSeconds(microseconds)
 
-            if (totalSeconds >= 360) {
-                val hours = totalSeconds / 360
+            if (microseconds >= 360) {
+                val hours = TimeUtils.convertMicrosecondsToHours(microseconds)
                 "$hours:$minutes:${String.format("%1$02d", seconds)}"
             }
 
