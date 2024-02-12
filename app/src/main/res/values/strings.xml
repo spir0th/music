@@ -16,6 +16,7 @@
     <string name="settings_title">Settings</string>
     <string name="settings_restart">This setting requires a restart to take effect.</string>
     <string name="prefs_appearance">Appearance</string>
+    <string name="prefs_appearance_s">Look and feel, player controls, system bars</string>
     <string name="prefs_appearance_app">Application</string>
     <string name="prefs_appearance_app_dynamic_colors">Dynamic color</string>
     <string name="prefs_appearance_app_dynamic_colors_s">Match app color scheme with the current wallpaper or through a selected color in the wallpaper picker.</string>
@@ -25,9 +26,11 @@
     <string name="prefs_appearance_other">Other</string>
     <string name="prefs_appearance_other_immersive">Immersive mode</string>
     <string name="prefs_audio">Audio</string>
+    <string name="prefs_audio_s">Playback, providers, cache</string>
     <string name="prefs_audio_playback">Playback</string>
     <string name="prefs_audio_playback_time_get_duration">Time to get duration</string>
     <string name="prefs_about">About</string>
+    <string name="prefs_about_s">App updates, information, feedback</string>
     <string name="prefs_about_name">Music</string>
     <string name="prefs_about_version">Version %1$s</string>
     <string name="prefs_about_updates">Check for updates</string>

@@ -4,6 +4,7 @@
 
     <Preference
         app:key="name"
+        app:icon="@drawable/baseline_audio_file_24"
         app:title="@string/app_name"
         app:summary="@string/prefs_about_version" />
     <Preference
@@ -18,6 +19,7 @@
             app:title="@string/prefs_about_dev_github" />
         <Preference
             app:enabled="false"
+            app:icon="@drawable/baseline_send_24"
             app:title="@string/prefs_about_dev_donate"
             app:summary="@string/prefs_about_dev_donate_s" />
     </PreferenceCategory>

@@ -2,14 +2,20 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
+        app:icon="@drawable/baseline_auto_awesome_24"
         app:fragment="io.github.spir0th.music.fragments.AppearanceSettingsFragment"
-        app:title="@string/prefs_appearance" />
+        app:title="@string/prefs_appearance"
+        app:summary="@string/prefs_appearance_s" />
     <Preference
+        app:icon="@drawable/baseline_audiotrack_24"
         app:fragment="io.github.spir0th.music.fragments.AudioSettingsFragment"
-        app:title="@string/prefs_audio" />
+        app:title="@string/prefs_audio"
+        app:summary="@string/prefs_audio_s" />
     <Preference
+        app:icon="@drawable/baseline_info_outline_24"
         app:fragment="io.github.spir0th.music.fragments.AboutFragment"
-        app:title="@string/prefs_about" />
+        app:title="@string/prefs_about"
+        app:summary="@string/prefs_about_s" />
     <Preference
         app:key="experimental"
         app:isPreferenceVisible="false"
