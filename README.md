@@ -1,7 +1,7 @@
 # Music
 ![GitHub Release](https://img.shields.io/github/v/release/spir0th/music?sort=semver&label=version)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/spir0th/music)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/spir0th/music/build)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/spir0th/music/build.yml)
 ![Maintenance](https://img.shields.io/maintenance/yes/2024)
 ![GitHub Issues](https://img.shields.io/github/issues/spir0th/music)
 
