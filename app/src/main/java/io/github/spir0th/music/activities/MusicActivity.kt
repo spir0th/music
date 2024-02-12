@@ -79,7 +79,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         super.onMediaItemTransition(mediaItem, reason)
-        intent?.data = mediaItem?.localConfiguration?.uri
         binding.playerControls.visibility = View.VISIBLE
         updatePlaybackSkipUI()
     }
@@ -216,13 +215,15 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                             item = MediaItem.fromUri(MediaUtils.generateMediaPersistence(this, it))
                         }
                         if (mediaController?.currentMediaItem != item) {
-                            Log.i(TAG, "Playing audio from incoming intent data: ${item.localConfiguration?.uri}")
+                            Log.i(TAG, "Adding audio from incoming intent data: ${item.localConfiguration?.uri}")
+                            intent?.data = null
                             mediaController?.stop()
                             mediaController?.addMediaItem(item)
                             mediaController?.seekTo(mediaController!!.mediaItemCount - 1, 0)
                             mediaController?.play()
                         } else {
                             Log.w(TAG, "Incoming intent data received but is already added into queue.")
+                            if (mediaController?.isPlaying == false) mediaController?.play() else 0
                         }
                     }
                 }
