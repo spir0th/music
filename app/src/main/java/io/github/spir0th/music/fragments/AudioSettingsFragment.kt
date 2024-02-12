@@ -1,15 +1,12 @@
 package io.github.spir0th.music.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.widget.Toast
 import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.jakewharton.processphoenix.ProcessPhoenix
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
 import io.github.spir0th.music.utils.MediaUtils
