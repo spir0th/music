@@ -22,6 +22,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences.registerOnSharedPreferenceChangeListener(this)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -35,14 +36,14 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             .commit()
     }
 
-    override fun onResume() {
-        super.onResume()
-        preferences.registerOnSharedPreferenceChangeListener(this)
+    override fun onDestroy() {
+        super.onDestroy()
+        preferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
-        preferences.unregisterOnSharedPreferenceChangeListener(this)
+        onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onPreferenceStartFragment(
