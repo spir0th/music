@@ -60,8 +60,9 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         // Toggle immersive mode if any of these checks are true
         if (preferences.getBoolean("immersive", false)) {
             UiUtils.setImmersiveMode(window, true)
-        } else {
+        } else if (preferences.getBoolean("immersive_on_landscape", true)) {
             // Depend on the screen orientation instead if respective preference is ticked off
+            // Immersive mode may also not be enabled if "immersive_on_landscape" is turned off
             UiUtils.setImmersiveMode(window, resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
         }
 
