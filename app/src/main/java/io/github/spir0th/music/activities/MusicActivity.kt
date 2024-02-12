@@ -114,24 +114,21 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     private fun updateMetadataUI(metadata: MediaMetadata? = mediaController?.mediaMetadata) {
         updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
+        binding.playerTitle.text = getString(R.string.app_name)
+        binding.playerCaption.text = getString(R.string.app_author)
 
         if (!metadata?.title.isNullOrEmpty()) {
             binding.playerTitle.text = metadata?.title
-        } else {
+        } else if (mediaController?.currentMediaItem?.localConfiguration?.uri != null) {
             // if metadata title is unavailable, we use Uri.lastPathSegment instead
             // or use the app name and author if getTitleFromUri is also unavailable
             val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
-
-            if (uri != null) {
-                binding.playerTitle.text = uri.lastPathSegment
-                binding.playerCaption.text = String()
-            } else {
-                binding.playerTitle.text = getString(R.string.app_name)
-                binding.playerCaption.text = getString(R.string.app_author)
-            }
+            binding.playerTitle.text = uri?.lastPathSegment
         }
         if (!metadata?.artist.isNullOrEmpty()) {
             binding.playerCaption.text = metadata?.artist
+        } else {
+            binding.playerCaption.text = String()
         }
     }
 
@@ -148,9 +145,9 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                 .transition(withCrossFade())
                 .into(binding.playerCoverArt)
 
-            showCoverArt()
+            toggleCoverArt(true)
         } else {
-            hideCoverArt() // always hide cover art if there is nothing to provide with.
+            toggleCoverArt(false)
         }
     }
 
@@ -209,6 +206,18 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         Glide.with(this@MusicActivity).load(drawable).into(binding.playerPlayback)
     }
 
+    private fun updateFromServiceIfLoaded() {
+        if (mediaController?.currentMediaItem == null) {
+            return
+        }
+
+        Log.i(TAG, "Started update from service if loaded")
+        updateMetadataUI()
+        updatePlaybackStateUI()
+        updatePlaybackSkipUI()
+        updatePlaybackDurationUI()
+    }
+
     private fun handleIncomingIntents() {
         when (intent?.action) {
             Intent.ACTION_VIEW -> {
@@ -240,18 +249,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
-    private fun updateFromServiceIfLoaded() {
-        if (mediaController?.currentMediaItem == null) {
-            return
-        }
-
-        Log.i(TAG, "Started update from service if loaded")
-        updateMetadataUI()
-        updatePlaybackStateUI()
-        updatePlaybackSkipUI()
-        updatePlaybackDurationUI()
-    }
-
     private fun doCleanupBeforeService() {
         if (mediaController?.mediaItemCount != 0) {
             return
@@ -276,16 +273,16 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         durationLoopRunnable?.let { durationLoopHandler?.removeCallbacks(it) }
     }
 
-    private fun showCoverArt() {
-        binding.playerCoverArt.visibility = View.VISIBLE
-        binding.playerCaption.setPadding(0, 0, 0, 4)
-        binding.playerControls.setPadding(0, 4, 0, 0)
-    }
-
-    private fun hideCoverArt() {
-        binding.playerCoverArt.visibility = View.GONE
-        binding.playerCaption.setPadding(0, 0, 0, 0)
-        binding.playerControls.setPadding(0, 0, 0, 0)
+    private fun toggleCoverArt(show: Boolean) {
+        if (show) {
+            binding.playerCoverArt.visibility = View.VISIBLE
+            binding.playerCaption.setPadding(0, 0, 0, 4)
+            binding.playerControls.setPadding(0, 4, 0, 0)
+        } else {
+            binding.playerCoverArt.visibility = View.GONE
+            binding.playerCaption.setPadding(0, 0, 0, 0)
+            binding.playerControls.setPadding(0, 0, 0, 0)
+        }
     }
 
     private fun registerControlListeners() {
