@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/content"
+        android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
@@ -21,15 +21,12 @@
             android:id="@+id/player_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/player_caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:text="@string/app_author"
             android:textAppearance="@style/TextAppearance.Material3.LabelMedium" />
 
         <ImageView
@@ -37,16 +34,13 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:contentDescription="@string/content_desc_player_cover_art"
-            android:visibility="gone"
             android:scaleType="fitCenter" />
 
         <LinearLayout
             android:id="@+id/player_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:animateLayoutChanges="true"
-            android:paddingTop="4dp"
             android:orientation="horizontal">
 
             <ImageButton

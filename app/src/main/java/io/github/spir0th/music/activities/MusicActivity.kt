@@ -47,7 +47,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         // Inflate activity view using ViewBinding
         binding = ActivityMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        UiUtils.adjustSystemBarInsetsForView(binding.content, top=true, bottom=true)
+        UiUtils.adjustSystemBarInsetsForView(binding.root, top=true, bottom=true)
 
         // Register listeners for player controls / activity callbacks
         registerControlListeners()
@@ -114,8 +114,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     private fun updateMetadataUI(metadata: MediaMetadata? = mediaController?.mediaMetadata) {
         updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
-        binding.playerTitle.text = getString(R.string.app_name)
-        binding.playerCaption.text = getString(R.string.app_author)
+        toggleMetadata(true)
 
         if (!metadata?.title.isNullOrEmpty()) {
             binding.playerTitle.text = metadata?.title
@@ -124,11 +123,13 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             // or use the app name and author if getTitleFromUri is also unavailable
             val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
             binding.playerTitle.text = uri?.lastPathSegment
+        } else {
+            toggleMetadata(false, 0)
         }
         if (!metadata?.artist.isNullOrEmpty()) {
             binding.playerCaption.text = metadata?.artist
         } else {
-            binding.playerCaption.text = String()
+            toggleMetadata(false, 1)
         }
     }
 
@@ -276,12 +277,41 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     private fun toggleCoverArt(show: Boolean) {
         if (show) {
             binding.playerCoverArt.visibility = View.VISIBLE
-            binding.playerCaption.setPadding(0, 0, 0, 4)
-            binding.playerControls.setPadding(0, 4, 0, 0)
         } else {
             binding.playerCoverArt.visibility = View.GONE
-            binding.playerCaption.setPadding(0, 0, 0, 0)
-            binding.playerControls.setPadding(0, 0, 0, 0)
+        }
+    }
+
+    private fun toggleMetadata(show: Boolean, applyTo: Int = -1) {
+        // "applyTo" is an integer with the value of -1, 0, or 1
+        // The following integer is equivalent to:
+        //      -1 = Applies to both title and caption
+        //      0 = Only applies to title
+        //      1 = Only applies to caption
+        when (applyTo) {
+            -1 -> {
+                if (show) {
+                    binding.playerTitle.visibility = View.VISIBLE
+                    binding.playerCaption.visibility = View.VISIBLE
+                } else {
+                    binding.playerTitle.visibility = View.GONE
+                    binding.playerCaption.visibility = View.GONE
+                }
+            }
+            0 -> {
+                if (show) {
+                    binding.playerTitle.visibility = View.VISIBLE
+                } else {
+                    binding.playerTitle.visibility = View.GONE
+                }
+            }
+            1 -> {
+                if (show) {
+                    binding.playerCaption.visibility = View.VISIBLE
+                } else {
+                    binding.playerCaption.visibility = View.GONE
+                }
+            }
         }
     }
 
