@@ -21,22 +21,7 @@ Customizing Music is also a thing, it's settings can be accessed by using the Ap
 ## Download
 APKs are uploaded through [GitHub releases](https://github.com/spir0th/music/releases) whenever a version is released.
 
-If you have problems with these APKs, use the feedback feature as it gets sent into my Supabase project
-or just use the [repository issues](https://github.com/spir0th/music/issues) as the problem gets solved immediately by other contributors.
-
 ## Building
-### Feedback API key
-The feedback feature requires an API key of a Supabase project to be set in order to upload
-feedbacks. To disable it, put this on your `local.properties` file:
-```
-supabase.ApiKey=null
-```
-
-Or, if you want to enable feedbacks, create a Supabase project then put it's API key like this:
-```
-supabase.ApiKey=<YOUR API KEY>
-```
-
 ### Android Studio
 Open the project in Android Studio, and generate a signed APK by using the application menu:
 ```

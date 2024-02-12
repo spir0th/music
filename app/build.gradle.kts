@@ -1,8 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    kotlin("plugin.serialization") version "1.9.22"
 }
 
 android {
@@ -42,9 +40,6 @@ android {
 }
 
 dependencies {
-    implementation(platform("io.github.jan-tennert.supabase:bom:2.1.3"))
-    implementation("io.github.jan-tennert.supabase:storage-kt")
-    implementation("io.ktor:ktor-client-android:2.3.8")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.media3:media3-exoplayer:1.2.1")
     implementation("androidx.media3:media3-ui:1.2.1")

@@ -32,7 +32,7 @@
     <string name="prefs_audio_playback_background_s">Audio playback will be played in background</string>
     <string name="prefs_audio_playback_time_get_duration">Time to get duration</string>
     <string name="prefs_about">About</string>
-    <string name="prefs_about_s">App updates, information, feedback</string>
+    <string name="prefs_about_s">App updates and information</string>
     <string name="prefs_about_name">Music</string>
     <string name="prefs_about_version">Version %1$s</string>
     <string name="prefs_about_updates">Check for updates</string>
@@ -41,16 +41,5 @@
     <string name="prefs_about_dev_github_url">https://github.com/spir0th/music</string>
     <string name="prefs_about_dev_donate">Donate</string>
     <string name="prefs_about_dev_donate_s">Support the developer by making coffee!</string>
-    <string name="prefs_about_help">Help</string>
-    <string name="prefs_about_help_feedback">Send feedback</string>
-    <string name="prefs_about_help_feedback_s">Report technical issues or suggest new features</string>
     <string name="prefs_experimental">Experimental settings</string>
-    <!-- Feedback strings -->
-    <string name="feedback_title">Feedback</string>
-    <string name="feedback_supabase_key_not_provided">This feature requires an API key to be set, tell that to the developers.</string>
-    <string name="feedback_input_field_caption">Tell us your opinion about this app</string>
-    <string name="feedback_input_field_error_empty">Your feedback should not be empty.</string>
-    <string name="feedback_submit">Submit</string>
-    <string name="feedback_submit_success">Your feedback has been submitted, thanks for your appreciation!</string>
-    <string name="feedback_submit_fail">Something went wrong while submitting your feedback, try again later.</string>
 </resources>
