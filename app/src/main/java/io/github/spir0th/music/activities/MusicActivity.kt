@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -241,8 +242,15 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                             // If the intent flags doesn't have FLAG_GRANT_PERSISTABLE_URI_PERMISSION set
                             // that means the audio content will be temporary and we'll be copying it to our
                             // cache directory so that it can be played without permission issues.
-                            Log.w(TAG, "Uri $it does not have persistence, making it persistent")
-                            item = MediaItem.fromUri(MediaUtils.generateMediaPersistence(this, it))
+                            if (preferences.getBoolean("non_persistent_playback", true)) {
+                                Log.w(TAG, "Uri $it does not have persistence, making it persistent")
+                                item = MediaItem.fromUri(MediaUtils.generateMediaPersistence(this, it))
+                            } else {
+                                Log.e(TAG, "Uri $it is non-persistent, but non-persistence playback is disabled. Exit!")
+                                Toast.makeText(this, R.string.player_non_persistence_disabled, Toast.LENGTH_LONG).show()
+                                onBackPressedDispatcher.onBackPressed()
+                                return
+                            }
                         }
                         if (mediaController?.currentMediaItem != item) {
                             Log.i(TAG, "Adding audio from incoming intent data: ${item.localConfiguration?.uri}")
