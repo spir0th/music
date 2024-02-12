@@ -113,7 +113,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         if (!metadata?.title.isNullOrEmpty()) {
             binding.playerTitle.text = metadata?.title
         } else {
-            // if metadata title is unavailable, we use MediaUtils.getTitleFromContentUri instead
+            // if metadata title is unavailable, we use Uri.lastPathSegment instead
             // or use the app name and author if getTitleFromUri is also unavailable
             val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
 
