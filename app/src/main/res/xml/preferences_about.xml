@@ -20,10 +20,15 @@
             app:enabled="false"
             app:title="@string/prefs_about_dev_donate"
             app:summary="@string/prefs_about_dev_donate_s" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:title="@string/prefs_about_help">
+
         <Preference
             app:key="feedback"
             app:icon="@drawable/baseline_feedback_24"
-            app:title="@string/prefs_about_dev_send_feedback">
+            app:title="@string/prefs_about_help_feedback"
+            app:summary="@string/prefs_about_help_feedback_s">
 
             <intent
                 android:targetPackage="io.github.spir0th.music"
