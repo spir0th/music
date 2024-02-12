@@ -15,8 +15,8 @@ and supports Dynamic Colors! (introduced in Android 13)
 Customizing Music is also a thing, it's settings can be accessed by using the App info page on your phone's settings.
 
 ## Screenshots
-|![player](https://github.com/spir0th/music/assets/66259245/cd12e3fe-70fc-4f75-b686-07616addf64f=50x50)<br>Player|![settings](https://github.com/spir0th/music/assets/66259245/530a1f83-0831-49f5-86e4-8723cf13a54a=50x50)<br>Settings|
-|:-:|:-:|
+| ![player](https://github.com/spir0th/music/assets/66259245/cd12e3fe-70fc-4f75-b686-07616addf64f=50x50) | ![settings](https://github.com/spir0th/music/assets/66259245/530a1f83-0831-49f5-86e4-8723cf13a54a=50x50) |
+|--------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 
 ## Download
 APKs are uploaded through [GitHub releases](https://github.com/spir0th/music/releases) whenever a version is released.
