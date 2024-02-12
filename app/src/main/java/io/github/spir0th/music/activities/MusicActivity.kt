@@ -3,6 +3,7 @@ package io.github.spir0th.music.activities
 import android.content.ComponentName
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
@@ -42,7 +43,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        UiUtils.setImmersiveMode(window, preferences.getBoolean("immersive", false))
 
         // Inflate activity view using ViewBinding
         binding = ActivityMusicBinding.inflate(layoutInflater)
@@ -56,6 +56,15 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     override fun onStart() {
         super.onStart()
+        // Toggle immersive mode if any of these checks are true
+        if (preferences.getBoolean("immersive", false)) {
+            UiUtils.setImmersiveMode(window, true)
+        } else {
+            // Depend on the screen orientation instead if respective preference is ticked off
+            UiUtils.setImmersiveMode(window, resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        }
+
+        // Connect activity to media session
         val sessionToken = SessionToken(this, ComponentName(this, PlaybackService::class.java))
         val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
 
@@ -75,9 +84,11 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         super.onStop()
 
         if (!preferences.getBoolean("background_playback", true)) {
+            // If background playback is disabled, then pause when user goes off the activity
             mediaController?.pause()
         }
 
+        // Remove player listeners and disconnect from activity
         mediaController?.removeListener(this)
         mediaController?.release()
     }

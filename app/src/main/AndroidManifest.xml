@@ -37,9 +37,7 @@
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.MusicOverlay"
-            tools:ignore="LockedOrientationActivity">
+            android:theme="@style/AppTheme.MusicOverlay">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -40,48 +40,54 @@
             android:id="@+id/player_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/player_skip_previous"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/content_desc_player_skip_previous"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/baseline_skip_previous_24" />
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/player_playback"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/content_desc_player_playback"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/baseline_play_arrow_24" />
+                <ImageButton
+                    android:id="@+id/player_skip_previous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/content_desc_player_skip_previous"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/baseline_skip_previous_24" />
 
-            <ImageButton
-                android:id="@+id/player_skip_next"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/content_desc_player_skip_next"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/baseline_skip_next_24" />
+                <ImageButton
+                    android:id="@+id/player_playback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/content_desc_player_playback"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/baseline_play_arrow_24" />
 
-            <com.google.android.material.slider.Slider
-                android:id="@+id/player_slider"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:trackColor="@android:color/white" />
+                <ImageButton
+                    android:id="@+id/player_skip_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/content_desc_player_skip_next"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/baseline_skip_next_24" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/player_seek_position"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="@string/player_seek_reset"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/player_slider"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:trackColor="@android:color/white" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/player_seek_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/player_seek_reset"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
