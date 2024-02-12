@@ -1,11 +1,28 @@
 # Music
-Android music player for handling intent filters.
+![GitHub Release](https://img.shields.io/github/v/release/spir0th/music?sort=semver&label=version)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/spir0th/music)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/spir0th/music/build)
+![Maintenance](https://img.shields.io/maintenance/yes/2024)
+![GitHub Issues](https://img.shields.io/github/issues/spir0th/music)
+
+A basic Android music player with it's purpose to handle URL data sent by your apps!
+
+## Overview
+Music uses Android Intent Filters to play audio files (which can be sent by 3rd-party apps with the `Open With` option) and lets ExoPlayer and
+Media3 API handle the audio playback, which integrates well with other media apps. Music also features a Material You theme (with a slight MD2-ish design)
+and supports Dynamic Colors! (introduced in Android 13)
+
+Customizing Music is also a thing, it's settings can be accessed by using the App info page on your phone's settings.
 
 ## Screenshots
-To be added soon
+|![player](https://github.com/spir0th/music/assets/66259245/cd12e3fe-70fc-4f75-b686-07616addf64f=50x50)<br>Player|![settings](https://github.com/spir0th/music/assets/66259245/530a1f83-0831-49f5-86e4-8723cf13a54a=50x50)<br>Settings|
+|:-:|:-:|
 
-## Downloads
-Built APKs are uploaded in [GitHub Releases](https://github.com/spir0th/music/releases/latest).
+## Download
+APKs are uploaded through [GitHub releases](https://github.com/spir0th/music/releases) whenever a version is released.
+
+If you have problems with these APKs, use the feedback feature as it gets sent into my Supabase project
+or just use the [repository issues](https://github.com/spir0th/music/issues) as the problem gets solved immediately by other contributors.
 
 ## Building
 ### Feedback API key
