@@ -55,4 +55,8 @@
     <string name="dialog_clean_persistence_message">Cleaning them right now needs the application to be restarted.</string>
     <string name="dialog_clean_persistence_positive">Yes</string>
     <string name="dialog_clean_persistence_negative">No</string>
+    <string name="dialog_dynamic_colors_restart_title">Restart?</string>
+    <string name="dialog_dynamic_colors_restart_message">Toggling dynamic colors requires a restart to take effect, do it now?</string>
+    <string name="dialog_dynamic_colors_restart_positive">Sure</string>
+    <string name="dialog_dynamic_colors_restart_negative">Not now</string>
 </resources>
