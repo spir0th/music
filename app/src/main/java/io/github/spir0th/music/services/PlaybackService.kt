@@ -3,9 +3,11 @@ package io.github.spir0th.music.services
 import android.app.PendingIntent
 import android.content.Intent
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import com.google.common.util.concurrent.ListenableFuture
 import io.github.spir0th.music.activities.MusicActivity
 
 class PlaybackService : MediaSessionService() {
@@ -14,11 +16,20 @@ class PlaybackService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
 
+        val intent = Intent(this, MusicActivity::class.java)
         val player = ExoPlayer.Builder(this)
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
         mediaSession = MediaSession.Builder(this, player)
-            .setSessionActivity(createPendingIntentForActivity())
+            .setCallback(@UnstableApi object: MediaSession.Callback {
+                override fun onPlaybackResumption(
+                    mediaSession: MediaSession,
+                    controller: MediaSession.ControllerInfo
+                ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+                    return super.onPlaybackResumption(mediaSession, controller)
+                }
+            })
+            .setSessionActivity(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .build()
     }
 
@@ -42,9 +53,4 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
-
-    private fun createPendingIntentForActivity(): PendingIntent {
-        val intent = Intent(this, MusicActivity::class.java)
-        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    }
 }

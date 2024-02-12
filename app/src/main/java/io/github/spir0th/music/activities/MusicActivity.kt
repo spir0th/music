@@ -136,8 +136,12 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun updateCoverArtUI(artworkData: ByteArray? = mediaController?.mediaMetadata?.artworkData) {
-        val bitmap = BitmapFactory.decodeByteArray(artworkData, 0, artworkData!!.size)
-
+        val bitmap = try {
+            BitmapFactory.decodeByteArray(artworkData, 0, artworkData!!.size)
+        } catch (_: NullPointerException) {
+            val emptyByteArray = byteArrayOf(1)
+            BitmapFactory.decodeByteArray(emptyByteArray, 0, emptyByteArray.size)
+        }
         if (bitmap != null) {
             Glide.with(this)
                 .load(bitmap)
