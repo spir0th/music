@@ -9,6 +9,11 @@
             app:defaultValue="true"
             app:title="@string/prefs_audio_playback_background"
             app:summary="@string/prefs_audio_playback_background_s" />
+        <CheckBoxPreference
+            app:key="audio_focus"
+            app:defaultValue="true"
+            app:title="@string/prefs_audio_playback_audio_focus"
+            app:summary="@string/prefs_audio_playback_audio_focus_s" />
         <EditTextPreference
             app:key="time_get_duration"
             app:defaultValue="1000"

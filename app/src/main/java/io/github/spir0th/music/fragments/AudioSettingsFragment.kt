@@ -2,6 +2,8 @@ package io.github.spir0th.music.fragments
 
 import android.os.Bundle
 import android.text.InputType
+import android.widget.Toast
+import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -11,8 +13,13 @@ import io.github.spir0th.music.activities.SettingsActivity
 class AudioSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_audio, rootKey)
+        val audioFocus = findPreference<CheckBoxPreference>("audio_focus")
         val timeGetDuration = findPreference<EditTextPreference>("time_get_duration")
 
+        audioFocus?.setOnPreferenceChangeListener { _, _ ->
+            Toast.makeText(requireContext(), R.string.settings_restart, Toast.LENGTH_LONG).show()
+            true
+        }
         timeGetDuration?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
             if (newValue.toString().isEmpty()) {
                 (preference as EditTextPreference).text = "0"
