@@ -314,7 +314,9 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
             override fun onStopTrackingTouch(slider: Slider) {
                 startDurationLoopHandler()
-                mediaController?.seekTo(((slider.value + 0.0) * mediaController!!.duration).toLong())
+                val milliseconds = ((slider.value + 0.0) * mediaController!!.duration).toLong()
+                Log.i(TAG, "Player slider value moved from ${mediaController?.currentPosition}ms to ${milliseconds}ms")
+                mediaController?.seekTo(milliseconds)
             }
         })
     }
