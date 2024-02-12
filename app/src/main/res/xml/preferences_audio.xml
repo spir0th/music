@@ -19,4 +19,16 @@
             app:defaultValue="1000"
             app:title="@string/prefs_audio_playback_time_get_duration" />
     </PreferenceCategory>
+    <PreferenceCategory
+        app:title="@string/prefs_audio_persistence">
+
+        <SwitchPreferenceCompat
+            app:key="disable_persistent_playback"
+            app:title="@string/prefs_audio_persistence_disable_playback"
+            app:summaryOff="@string/prefs_audio_persistence_disable_playback_s_off"
+            app:summaryOn="@string/prefs_audio_persistence_disable_playback_s_on" />
+        <Preference
+            app:key="clean_persistence"
+            app:title="@string/prefs_audio_persistence_clean" />
+    </PreferenceCategory>
 </PreferenceScreen>

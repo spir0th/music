@@ -33,6 +33,11 @@
     <string name="prefs_audio_playback_audio_focus">Audio focus</string>
     <string name="prefs_audio_playback_audio_focus_s">Prevent audio playback from simultaneously playing with other apps</string>
     <string name="prefs_audio_playback_time_get_duration">Time to get duration</string>
+    <string name="prefs_audio_persistence">Persistence</string>
+    <string name="prefs_audio_persistence_disable_playback">Disable persistent playback</string>
+    <string name="prefs_audio_persistence_disable_playback_s_off">Don\'t toggle this option unless you know what you are doing.</string>
+    <string name="prefs_audio_persistence_disable_playback_s_on">The application will no longer handle non-persistent audio.</string>
+    <string name="prefs_audio_persistence_clean">Clean unneeded persists</string>
     <string name="prefs_about">About</string>
     <string name="prefs_about_s">See what\'s up for this application</string>
     <string name="prefs_about_name">Music</string>
@@ -44,4 +49,9 @@
     <string name="prefs_about_dev_donate">Donate</string>
     <string name="prefs_about_dev_donate_s">Support the developer by making coffee!</string>
     <string name="prefs_experimental">Experimental settings</string>
+    <!-- Dialog strings -->
+    <string name="dialog_clean_persistence_title">Delete persistent files?</string>
+    <string name="dialog_clean_persistence_message">Cleaning them right now needs the application to be restarted.</string>
+    <string name="dialog_clean_persistence_positive">Yes</string>
+    <string name="dialog_clean_persistence_negative">No</string>
 </resources>
