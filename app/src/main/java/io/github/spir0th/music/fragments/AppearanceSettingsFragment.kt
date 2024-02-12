@@ -2,7 +2,6 @@ package io.github.spir0th.music.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
