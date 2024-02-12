@@ -43,8 +43,8 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         preferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         onBackPressedDispatcher.onBackPressed()
     }
 
