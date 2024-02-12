@@ -73,6 +73,11 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     override fun onStop() {
         super.onStop()
+
+        if (!preferences.getBoolean("background_playback", true)) {
+            mediaController?.pause()
+        }
+
         mediaController?.removeListener(this)
         mediaController?.release()
     }

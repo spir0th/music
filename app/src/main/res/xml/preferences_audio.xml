@@ -4,6 +4,11 @@
     <PreferenceCategory
         app:title="@string/prefs_audio_playback">
 
+        <CheckBoxPreference
+            app:key="background_playback"
+            app:defaultValue="true"
+            app:title="@string/prefs_audio_playback_background"
+            app:summary="@string/prefs_audio_playback_background_s" />
         <EditTextPreference
             app:key="time_get_duration"
             app:defaultValue="1000"
