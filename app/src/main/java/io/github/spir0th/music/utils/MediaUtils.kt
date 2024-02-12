@@ -1,6 +1,5 @@
 package io.github.spir0th.music.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
@@ -28,10 +27,5 @@ object MediaUtils {
 
     @JvmStatic fun cleanMediaPersists(context: Context) {
         File(context.dataDir, "persistence").deleteRecursively()
-    }
-
-    @SuppressLint("Range")
-    @JvmStatic fun getFilenameFromUri(uri: Uri?): String? {
-        return uri?.lastPathSegment
     }
 }

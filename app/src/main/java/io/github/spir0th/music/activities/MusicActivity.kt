@@ -118,7 +118,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
 
             if (uri != null) {
-                binding.playerTitle.text = MediaUtils.getFilenameFromUri(uri)
+                binding.playerTitle.text = uri.lastPathSegment
                 binding.playerCaption.text = String()
             } else {
                 binding.playerTitle.text = getString(R.string.app_name)
