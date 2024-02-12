@@ -13,7 +13,14 @@ class AboutFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_about, rootKey)
         parsePreferenceStringPlaceholders()
-        registerOnClickListeners()
+
+        val github = findPreference<Preference>("github")!!
+
+        github.setOnPreferenceClickListener {
+            val cTabsIntent = CustomTabsIntent.Builder().build()
+            cTabsIntent.launchUrl(requireActivity(), Uri.parse(getString(R.string.prefs_about_dev_github_url)))
+            true
+        }
     }
 
     override fun onStart() {
@@ -22,16 +29,6 @@ class AboutFragment : PreferenceFragmentCompat() {
         if (requireActivity() is SettingsActivity) {
             val activity = requireActivity() as SettingsActivity
             activity.supportActionBar?.title = getString(R.string.prefs_about)
-        }
-    }
-
-    private fun registerOnClickListeners() {
-        val github = findPreference<Preference>("github")!!
-
-        github.setOnPreferenceClickListener {
-            val cTabsIntent = CustomTabsIntent.Builder().build()
-            cTabsIntent.launchUrl(requireActivity(), Uri.parse(getString(R.string.prefs_about_dev_github_url)))
-            true
         }
     }
 
