@@ -23,7 +23,19 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
         val cleanPersistence = findPreference<Preference>("clean_persistence")
 
         audioFocus?.setOnPreferenceChangeListener { _, _ ->
-            Toast.makeText(requireContext(), R.string.settings_restart, Toast.LENGTH_LONG).show()
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.dialog_audio_focus_restart_title)
+                .setMessage(R.string.dialog_audio_focus_restart_message)
+                .setPositiveButton(R.string.dialog_audio_focus_restart_positive) { dialog, _ ->
+                    dialog.dismiss() // Dismiss dialog
+                    (requireActivity() as SettingsActivity).restartApplication() // Restart application
+                }
+                .setNegativeButton(R.string.dialog_audio_focus_restart_negative) { dialog, _ ->
+                    dialog.dismiss() // Only dismiss dialog
+                }
+                .setCancelable(false)
+                .show()
+
             true
         }
         timeGetDuration?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
@@ -53,13 +65,10 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
                 .setTitle(R.string.dialog_clean_persistence_title)
                 .setMessage(R.string.dialog_clean_persistence_message)
                 .setPositiveButton(R.string.dialog_clean_persistence_positive) { dialog, _ ->
-                    // Dismiss current dialog then clean the persistent files
+                    // Dismiss current dialog, clean persistent files, then restart self
                     dialog.dismiss()
                     MediaUtils.cleanMediaPersists(requireContext())
-
-                    // Start an instance of this activity and kill this one (basically restart self)
-                    val intent = Intent(requireContext(), SettingsActivity::class.java)
-                    ProcessPhoenix.triggerRebirth(requireContext(), intent)
+                    (requireActivity() as SettingsActivity).restartApplication()
                 }
                 .setNegativeButton(R.string.dialog_clean_persistence_negative) { dialog, _ ->
                     // Only dismiss dialog

@@ -51,12 +51,20 @@
     <string name="prefs_about_dev_donate_s">Support the developer by making coffee!</string>
     <string name="prefs_experimental">Experimental settings</string>
     <!-- Dialog strings -->
+    <string name="dialog_restart_optional_title">Restart?</string>
+    <string name="dialog_restart_optional_message">Changing this setting requires a restart to take effect, do it now?</string>
+    <string name="dialog_restart_optional_positive">Sure</string>
+    <string name="dialog_restart_optional_negative">Not now</string>
+    <string name="dialog_dynamic_colors_restart_title">@string/dialog_restart_optional_title</string>
+    <string name="dialog_dynamic_colors_restart_message">Toggling dynamic colors requires a restart to take effect, do it now?</string>
+    <string name="dialog_dynamic_colors_restart_positive">@string/dialog_restart_optional_positive</string>
+    <string name="dialog_dynamic_colors_restart_negative">@string/dialog_restart_optional_negative</string>
     <string name="dialog_clean_persistence_title">Delete persistent files?</string>
     <string name="dialog_clean_persistence_message">Cleaning them right now needs the application to be restarted.</string>
     <string name="dialog_clean_persistence_positive">Yes</string>
     <string name="dialog_clean_persistence_negative">No</string>
-    <string name="dialog_dynamic_colors_restart_title">Restart?</string>
-    <string name="dialog_dynamic_colors_restart_message">Toggling dynamic colors requires a restart to take effect, do it now?</string>
-    <string name="dialog_dynamic_colors_restart_positive">Sure</string>
-    <string name="dialog_dynamic_colors_restart_negative">Not now</string>
+    <string name="dialog_audio_focus_restart_title">@string/dialog_restart_optional_title</string>
+    <string name="dialog_audio_focus_restart_message">Toggling audio focus requires a restart to take effect, do it now?</string>
+    <string name="dialog_audio_focus_restart_positive">@string/dialog_restart_optional_positive</string>
+    <string name="dialog_audio_focus_restart_negative">@string/dialog_restart_optional_negative</string>
 </resources>

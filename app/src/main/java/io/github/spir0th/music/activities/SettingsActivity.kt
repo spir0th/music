@@ -1,5 +1,6 @@
 package io.github.spir0th.music.activities
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.jakewharton.processphoenix.ProcessPhoenix
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivitySettingsBinding
 import io.github.spir0th.music.fragments.SettingsFragment
@@ -88,6 +90,11 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         }
 
         return super.onSupportNavigateUp()
+    }
+
+    fun restartApplication() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        ProcessPhoenix.triggerRebirth(this, intent)
     }
 
     companion object {

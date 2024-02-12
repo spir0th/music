@@ -20,10 +20,7 @@ class AppearanceSettingsFragment : PreferenceFragmentCompat() {
                 .setMessage(R.string.dialog_dynamic_colors_restart_message)
                 .setPositiveButton(R.string.dialog_dynamic_colors_restart_positive) { dialog, _ ->
                     dialog.dismiss() // Dismiss dialog
-
-                    // Restart application
-                    val intent = Intent(requireContext(), SettingsActivity::class.java)
-                    ProcessPhoenix.triggerRebirth(requireContext(), intent)
+                    (requireActivity() as SettingsActivity).restartApplication() // Restart self
                 }
                 .setNegativeButton(R.string.dialog_dynamic_colors_restart_negative) { dialog, _ ->
                     dialog.dismiss() // Only dismiss dialog
