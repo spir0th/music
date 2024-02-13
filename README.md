@@ -8,14 +8,14 @@
 A basic Android music player with it's purpose to handle URL data sent by your apps!
 
 ## Overview
-Music uses Android Intent Filters to play audio files (which can be sent by 3rd-party apps with the `Open With` option) and lets ExoPlayer and
+Music uses Android Intent Filters to play audio files (which are sent by 3rd-party apps with the `Open With` option) and lets ExoPlayer and
 Media3 API handle the audio playback, which integrates well with other media apps. Music also features a Material You theme (with a slight MD2-ish design)
 and supports Dynamic Colors! (introduced in Android 13)
 
 Customizing Music is also a thing, it's settings can be accessed by using the App info page on your phone's settings.
 
 ## Screenshots
-| ![player](https://github.com/spir0th/music/assets/66259245/cd12e3fe-70fc-4f75-b686-07616addf64f=50x50) | ![settings](https://github.com/spir0th/music/assets/66259245/530a1f83-0831-49f5-86e4-8723cf13a54a=50x50) |
+| ![player](https://github.com/spir0th/music/assets/66259245/fdbf0b20-e5fa-4e9c-9a07-42120a575485) | ![settings](https://github.com/spir0th/music/assets/66259245/4d0a828e-d720-4f63-859f-b7165c6b82de) |
 |--------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 
 ## Download
