@@ -42,15 +42,12 @@ class AboutFragment : PreferenceFragmentCompat() {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.dialog_disable_experimental_features_title)
                         .setMessage(R.string.dialog_disable_experimental_features_message)
-                        .setPositiveButton(R.string.dialog_disable_experimental_features_positive) { dialog, _ ->
-                            dialog.dismiss()
+                        .setPositiveButton(R.string.dialog_disable_experimental_features_positive) { _, _ ->
                             Toast.makeText(requireContext(), R.string.prefs_about_experiments_disabled, Toast.LENGTH_LONG).show()
                             preferences.edit().putBoolean("experiments", false).apply()
                             (requireActivity() as SettingsActivity).restartApplication()
                         }
-                        .setNegativeButton(R.string.dialog_disable_experimental_features_negative) { dialog, _ ->
-                            dialog.dismiss()
-                        }
+                        .setNegativeButton(R.string.dialog_disable_experimental_features_negative) { _, _ -> }
                         .setCancelable(false)
                         .show()
                 }

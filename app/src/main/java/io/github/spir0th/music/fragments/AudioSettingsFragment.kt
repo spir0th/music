@@ -23,13 +23,10 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.dialog_audio_focus_restart_title)
                 .setMessage(R.string.dialog_audio_focus_restart_message)
-                .setPositiveButton(R.string.dialog_audio_focus_restart_positive) { dialog, _ ->
-                    dialog.dismiss() // Dismiss dialog
+                .setPositiveButton(R.string.dialog_audio_focus_restart_positive) { _, _ ->
                     (requireActivity() as SettingsActivity).restartApplication() // Restart application
                 }
-                .setNegativeButton(R.string.dialog_audio_focus_restart_negative) { dialog, _ ->
-                    dialog.dismiss() // Only dismiss dialog
-                }
+                .setNegativeButton(R.string.dialog_audio_focus_restart_negative) { _, _ -> }
                 .setCancelable(false)
                 .show()
 
@@ -61,16 +58,12 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.dialog_clean_persistence_title)
                 .setMessage(R.string.dialog_clean_persistence_message)
-                .setPositiveButton(R.string.dialog_clean_persistence_positive) { dialog, _ ->
-                    // Dismiss current dialog, clean persistent files, then restart self
-                    dialog.dismiss()
+                .setPositiveButton(R.string.dialog_clean_persistence_positive) { _, _ ->
+                    // Clean persistent files, then restart self
                     MediaUtils.cleanMediaPersists(requireContext())
                     (requireActivity() as SettingsActivity).restartApplication()
                 }
-                .setNegativeButton(R.string.dialog_clean_persistence_negative) { dialog, _ ->
-                    // Only dismiss dialog
-                    dialog.dismiss()
-                }
+                .setNegativeButton(R.string.dialog_clean_persistence_negative) { _, _ -> }
                 .setCancelable(false)
                 .show()
 

@@ -16,13 +16,10 @@ class AppearanceSettingsFragment : PreferenceFragmentCompat() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.dialog_dynamic_colors_restart_title)
                 .setMessage(R.string.dialog_dynamic_colors_restart_message)
-                .setPositiveButton(R.string.dialog_dynamic_colors_restart_positive) { dialog, _ ->
-                    dialog.dismiss() // Dismiss dialog
+                .setPositiveButton(R.string.dialog_dynamic_colors_restart_positive) { _, _ ->
                     (requireActivity() as SettingsActivity).restartApplication() // Restart self
                 }
-                .setNegativeButton(R.string.dialog_dynamic_colors_restart_negative) { dialog, _ ->
-                    dialog.dismiss() // Only dismiss dialog
-                }
+                .setNegativeButton(R.string.dialog_dynamic_colors_restart_negative) { _, _ -> }
                 .setCancelable(false)
                 .show()
 

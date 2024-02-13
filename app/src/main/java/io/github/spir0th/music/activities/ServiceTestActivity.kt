@@ -60,13 +60,10 @@ class ServiceTestActivity : AppCompatActivity() {
                 AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_clear_media_items_title)
                     .setMessage(R.string.dialog_clear_media_items_message)
-                    .setPositiveButton(R.string.dialog_clear_media_items_positive) { dialog, _ ->
-                        dialog.dismiss()
+                    .setPositiveButton(R.string.dialog_clear_media_items_positive) { _, _ ->
                         clearMediaItems()
                     }
-                    .setNegativeButton(R.string.dialog_clear_media_items_negative) { dialog, _ ->
-                        dialog.dismiss()
-                    }
+                    .setNegativeButton(R.string.dialog_clear_media_items_negative) { _, _ -> }
                     .show()
             } else {
                 clearMediaItems()
@@ -83,14 +80,11 @@ class ServiceTestActivity : AppCompatActivity() {
             AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_create_media_item_title)
                 .setView(uriEditText)
-                .setPositiveButton(R.string.dialog_create_media_item_positive) { dialog, _ ->
-                    dialog.dismiss()
+                .setPositiveButton(R.string.dialog_create_media_item_positive) { _, _ ->
                     mediaController!!.addMediaItem(MediaItem.fromUri(uriEditText.text.toString()))
                     Toast.makeText(this, R.string.service_info_create_media_item_success, Toast.LENGTH_LONG).show()
                 }
-                .setNegativeButton(R.string.dialog_create_media_item_negative) { dialog, _ ->
-                    dialog.dismiss()
-                }
+                .setNegativeButton(R.string.dialog_create_media_item_negative) { _, _ -> }
                 .show()
         }
         binding.connectSession.setOnClickListener {
