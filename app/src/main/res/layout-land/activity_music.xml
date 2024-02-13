@@ -10,32 +10,34 @@
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:baselineAligned="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="64dp"
-        android:paddingEnd="64dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
         tools:ignore="UselessParent">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/player_cover_art"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:contentDescription="@string/content_desc_player_cover_art"
-                android:scaleType="fitCenter" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/player_cover_art"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/content_desc_player_cover_art" />
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:paddingStart="32dp"

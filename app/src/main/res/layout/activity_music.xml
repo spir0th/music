@@ -17,24 +17,35 @@
         android:paddingEnd="64dp"
         tools:ignore="UselessParent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/player_title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge" />
+            android:paddingBottom="8dp"
+            android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/player_caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.LabelMedium" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/player_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge" />
 
-        <ImageView
-            android:id="@+id/player_cover_art"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:contentDescription="@string/content_desc_player_cover_art"
-            android:scaleType="fitCenter" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/player_caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium" />
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="250dp"
+            android:layout_height="250dp">
+
+            <ImageView
+                android:id="@+id/player_cover_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_desc_player_cover_art" />
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:id="@+id/player_controls"
