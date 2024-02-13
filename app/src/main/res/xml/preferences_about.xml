@@ -10,6 +10,10 @@
         app:enabled="false"
         app:icon="@drawable/baseline_update_24"
         app:title="@string/prefs_about_updates" />
+    <CheckBoxPreference
+        app:key="experiments"
+        app:isPreferenceVisible="false"
+        app:title="@string/prefs_about_experiments" />
     <PreferenceCategory
         app:title="@string/prefs_about_dev">
 

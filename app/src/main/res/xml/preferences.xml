@@ -18,6 +18,7 @@
         app:summary="@string/prefs_about_s" />
     <Preference
         app:key="experimental"
+        app:fragment="io.github.spir0th.music.fragments.ExperimentalSettingsFragment"
         app:isPreferenceVisible="false"
         app:title="@string/prefs_experimental" />
 </PreferenceScreen>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        app:key="logs"
+        app:title="@string/prefs_experimental_logs" />
+    <Preference
+        app:key="service_info"
+        app:title="@string/prefs_experimental_service_info">
+
+        <intent
+            android:targetPackage="io.github.spir0th.music"
+            android:targetClass="io.github.spir0th.music.activities.ServiceTestActivity" />
+    </Preference>
+    <Preference
+        app:key="device_info"
+        app:title="@string/prefs_experimental_device_info">
+
+        <intent
+            android:targetPackage="io.github.spir0th.music"
+            android:targetClass="io.github.spir0th.music.activities.DeviceInfoActivity" />
+    </Preference>
+    <Preference
+        app:key="force_restart"
+        app:title="@string/prefs_experimental_force_restart" />
+</PreferenceScreen>

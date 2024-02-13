@@ -18,7 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="tiramisu">
-
+        <activity
+            android:name=".activities.DeviceInfoActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.Experimental" />
+        <activity
+            android:name=".activities.ServiceTestActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.Experimental" />
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
