@@ -50,9 +50,51 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         setContentView(binding.root)
         UiUtils.adjustSystemBarInsetsForView(binding.root, top=true, bottom=true)
 
-        // Register listeners for player controls / activity callbacks
-        registerControlListeners()
-        registerCallbacks()
+        // Register listeners for activity callbacks / player controls
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        })
+        binding.playerPlayback.setOnClickListener {
+            if (mediaController?.isPlaying == true) {
+                mediaController!!.pause()
+            } else {
+                mediaController?.play()
+            }
+        }
+        binding.playerSkipPrevious.setOnClickListener {
+            mediaController?.seekToPrevious()
+        }
+        binding.playerSkipNext.setOnClickListener {
+            mediaController?.seekToNext()
+        }
+        binding.playerSlider.setLabelFormatter { value ->
+            // copied from updatePlaybackDurationUI
+            val milliseconds = ((value + 0.0) * mediaController!!.duration).toLong()
+            val microseconds = TimeUtils.convertMillisecondsToMicroseconds(milliseconds)
+            val minutes = TimeUtils.convertMicrosecondsToMinutes(microseconds)
+            val seconds = TimeUtils.convertMicrosecondsToSeconds(microseconds)
+
+            if (microseconds >= 360) {
+                val hours = TimeUtils.convertMicrosecondsToHours(microseconds)
+                "$hours:$minutes:${String.format("%1$02d", seconds)}"
+            }
+
+            "$minutes:${String.format("%1$02d", seconds)}"
+        }
+        binding.playerSlider.addOnSliderTouchListener(object: Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
+                stopDurationLoopHandler()
+            }
+
+            override fun onStopTrackingTouch(slider: Slider) {
+                startDurationLoopHandler()
+                val milliseconds = ((slider.value + 0.0) * mediaController!!.duration).toLong()
+                Log.i(TAG, "Player slider value moved from ${mediaController?.currentPosition}ms to ${milliseconds}ms")
+                mediaController?.seekTo(milliseconds)
+            }
+        })
     }
 
     override fun onStart() {
@@ -333,56 +375,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                 }
             }
         }
-    }
-
-    private fun registerControlListeners() {
-        binding.playerPlayback.setOnClickListener {
-            if (mediaController?.isPlaying == true) {
-                mediaController!!.pause()
-            } else {
-                mediaController?.play()
-            }
-        }
-        binding.playerSkipPrevious.setOnClickListener {
-            mediaController?.seekToPrevious()
-        }
-        binding.playerSkipNext.setOnClickListener {
-            mediaController?.seekToNext()
-        }
-        binding.playerSlider.setLabelFormatter { value ->
-            // copied from updatePlaybackDurationUI
-            val milliseconds = ((value + 0.0) * mediaController!!.duration).toLong()
-            val microseconds = TimeUtils.convertMillisecondsToMicroseconds(milliseconds)
-            val minutes = TimeUtils.convertMicrosecondsToMinutes(microseconds)
-            val seconds = TimeUtils.convertMicrosecondsToSeconds(microseconds)
-
-            if (microseconds >= 360) {
-                val hours = TimeUtils.convertMicrosecondsToHours(microseconds)
-                "$hours:$minutes:${String.format("%1$02d", seconds)}"
-            }
-
-            "$minutes:${String.format("%1$02d", seconds)}"
-        }
-        binding.playerSlider.addOnSliderTouchListener(object: Slider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: Slider) {
-                stopDurationLoopHandler()
-            }
-
-            override fun onStopTrackingTouch(slider: Slider) {
-                startDurationLoopHandler()
-                val milliseconds = ((slider.value + 0.0) * mediaController!!.duration).toLong()
-                Log.i(TAG, "Player slider value moved from ${mediaController?.currentPosition}ms to ${milliseconds}ms")
-                mediaController?.seekTo(milliseconds)
-            }
-        })
-    }
-
-    private fun registerCallbacks() {
-        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finish()
-            }
-        })
     }
 
     companion object {
