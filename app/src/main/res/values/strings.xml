@@ -128,7 +128,7 @@
     <string name="dialog_audio_focus_restart_positive">@string/dialog_restart_optional_positive</string>
     <string name="dialog_audio_focus_restart_negative">@string/dialog_restart_optional_negative</string>
     <string name="dialog_disable_experimental_features_title">Disable experimental features?</string>
-    <string name="dialog_disable_experimental_features_message">If you turn it off, enabled experimental functions may be disabled.</string>
+    <string name="dialog_disable_experimental_features_message">If you disable it, you will lose access to the god-tier menu!</string>
     <string name="dialog_disable_experimental_features_positive">Yes</string>
     <string name="dialog_disable_experimental_features_negative">No</string>
     <string name="dialog_clear_media_items_title">Clear media items?</string>
