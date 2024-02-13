@@ -100,8 +100,4 @@ class DeviceInfoActivity : AppCompatActivity() {
         builder.appendLine(getString(R.string.device_info_package_type, BuildConfig.BUILD_TYPE))
         binding.info.text = builder
     }
-
-    companion object {
-        const val TAG = "DeviceInfoActivity"
-    }
 }
