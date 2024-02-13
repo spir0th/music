@@ -28,8 +28,8 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.settingsToolbar)
-        UiUtils.adjustSystemBarInsetsForView(binding.settingsToolbar, top=true)
+        setSupportActionBar(binding.toolbar)
+        UiUtils.adjustSystemBarInsetsForView(binding.toolbar, top=true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         supportFragmentManager
