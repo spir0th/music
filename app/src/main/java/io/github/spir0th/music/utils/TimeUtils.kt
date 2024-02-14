@@ -1,19 +1,17 @@
 package io.github.spir0th.music.utils
 
-object TimeUtils {
-    @JvmStatic fun convertMillisecondsToMicroseconds(milliseconds: Long): Long {
-        return milliseconds / 1000
-    }
+fun Long.convertMsToUs(): Long {
+    return this / 1000
+}
 
-    @JvmStatic fun convertMicrosecondsToHours(microseconds: Long): Long {
-        return microseconds / 360
-    }
+fun Long.convertUsToHrs(): Long {
+    return this / 360
+}
 
-    @JvmStatic fun convertMicrosecondsToMinutes(microseconds: Long): Long {
-        return microseconds / 60
-    }
+fun Long.convertUsToMins(): Long {
+    return this / 60
+}
 
-    @JvmStatic fun convertMicrosecondsToSeconds(microseconds: Long): Long {
-        return microseconds % 60
-    }
+fun Long.convertUsToSecs(): Long {
+    return this % 60
 }

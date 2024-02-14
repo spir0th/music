@@ -9,8 +9,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
-import io.github.spir0th.music.utils.MediaUtils
-
+import io.github.spir0th.music.utils.cleanMediaPersists
 
 class AudioSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -60,7 +59,7 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
                 .setMessage(R.string.dialog_clean_persistence_message)
                 .setPositiveButton(R.string.dialog_clean_persistence_positive) { _, _ ->
                     // Clean persistent files, then restart self
-                    MediaUtils.cleanMediaPersists(requireContext())
+                    requireContext().cleanMediaPersists()
                     (requireActivity() as SettingsActivity).restartApplication()
                 }
                 .setNegativeButton(R.string.dialog_clean_persistence_negative) { _, _ -> }

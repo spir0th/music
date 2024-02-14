@@ -20,7 +20,7 @@ import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityServiceTestBinding
 import io.github.spir0th.music.services.PlaybackService
-import io.github.spir0th.music.utils.UiUtils
+import io.github.spir0th.music.utils.adjustForSystemBarInsets
 
 class ServiceTestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityServiceTestBinding
@@ -32,10 +32,11 @@ class ServiceTestActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityServiceTestBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding.toolbar.adjustForSystemBarInsets(top=true)
 
+        setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        UiUtils.adjustSystemBarInsetsForView(binding.toolbar, top=true)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.service_info_title)
 

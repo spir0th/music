@@ -5,27 +5,25 @@ import android.net.Uri
 import androidx.core.net.toUri
 import java.io.File
 
-object MediaUtils {
-    @JvmStatic fun generateMediaPersistence(context: Context, uri: Uri?): Uri {
-        val dir = File(context.dataDir, "persistence")
-        val noMedia = File(dir, ".nomedia")
-        val original = context.contentResolver.openInputStream(uri!!)!!
-        val cached = uri.lastPathSegment?.let { File(dir, it) }!!
+fun Uri.generateMediaPersistence(context: Context): Uri {
+    val dir = File(context.dataDir, "persistence")
+    val noMedia = File(dir, ".nomedia")
+    val original = context.contentResolver.openInputStream(this)!!
+    val cached = lastPathSegment?.let { File(dir, it) }!!
 
-        dir.mkdirs()
-        noMedia.createNewFile()
+    dir.mkdirs()
+    noMedia.createNewFile()
 
-        original.use { input ->
-            cached.outputStream().use { output ->
-                input.copyTo(output)
-            }
+    original.use { input ->
+        cached.outputStream().use { output ->
+            input.copyTo(output)
         }
-
-        original.close()
-        return cached.toUri()
     }
 
-    @JvmStatic fun cleanMediaPersists(context: Context) {
-        File(context.dataDir, "persistence").deleteRecursively()
-    }
+    original.close()
+    return cached.toUri()
+}
+
+fun Context.cleanMediaPersists() {
+    File(dataDir, "persistence").deleteRecursively()
 }

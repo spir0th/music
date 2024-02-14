@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.spir0th.music.BuildConfig
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityDeviceInfoBinding
-import io.github.spir0th.music.utils.UiUtils
+import io.github.spir0th.music.utils.adjustForSystemBarInsets
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -44,10 +44,11 @@ class DeviceInfoActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityDeviceInfoBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding.toolbar.adjustForSystemBarInsets(top=true)
 
+        setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        UiUtils.adjustSystemBarInsetsForView(binding.toolbar, top=true)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.device_info_title)
 

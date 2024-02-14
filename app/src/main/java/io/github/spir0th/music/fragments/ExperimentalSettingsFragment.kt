@@ -8,7 +8,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
 import java.io.File
-
 class ExperimentalSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_experimental, rootKey)

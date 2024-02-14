@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
@@ -29,9 +30,14 @@ import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityMusicBinding
 import io.github.spir0th.music.services.PlaybackService
-import io.github.spir0th.music.utils.MediaUtils
-import io.github.spir0th.music.utils.TimeUtils
-import io.github.spir0th.music.utils.UiUtils
+import io.github.spir0th.music.utils.adjustForSystemBarInsets
+import io.github.spir0th.music.utils.convertMsToUs
+import io.github.spir0th.music.utils.convertUsToHrs
+import io.github.spir0th.music.utils.convertUsToMins
+import io.github.spir0th.music.utils.convertUsToSecs
+import io.github.spir0th.music.utils.cleanMediaPersists
+import io.github.spir0th.music.utils.generateMediaPersistence
+import io.github.spir0th.music.utils.setImmersiveMode
 
 class MusicActivity : AppCompatActivity(), Player.Listener {
     private lateinit var binding: ActivityMusicBinding
@@ -47,8 +53,8 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
         // Inflate activity view using ViewBinding
         binding = ActivityMusicBinding.inflate(layoutInflater)
+        binding.root.adjustForSystemBarInsets(top=true, bottom=true)
         setContentView(binding.root)
-        UiUtils.adjustSystemBarInsetsForView(binding.root, top=true, bottom=true)
 
         // Register listeners for activity callbacks / player controls
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
@@ -72,12 +78,12 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.playerSlider.setLabelFormatter { value ->
             // copied from updatePlaybackDurationUI
             val milliseconds = ((value + 0.0) * mediaController!!.duration).toLong()
-            val microseconds = TimeUtils.convertMillisecondsToMicroseconds(milliseconds)
-            val minutes = TimeUtils.convertMicrosecondsToMinutes(microseconds)
-            val seconds = TimeUtils.convertMicrosecondsToSeconds(microseconds)
+            val microseconds = milliseconds.convertMsToUs()
+            val minutes = microseconds.convertUsToMins()
+            val seconds = microseconds.convertUsToSecs()
 
             if (microseconds >= 360) {
-                val hours = TimeUtils.convertMicrosecondsToHours(microseconds)
+                val hours = microseconds.convertUsToHrs()
                 "$hours:$minutes:${String.format("%1$02d", seconds)}"
             }
 
@@ -101,11 +107,14 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         super.onStart()
         // Toggle immersive mode if any of these checks are true
         if (preferences.getBoolean("immersive", false)) {
-            UiUtils.setImmersiveMode(window, true)
+            WindowCompat.getInsetsController(window, window.decorView).setImmersiveMode(window, true)
         } else if (preferences.getBoolean("immersive_on_landscape", true)) {
             // Depend on the screen orientation instead if respective preference is ticked off
             // Immersive mode may also not be enabled if "immersive_on_landscape" is turned off
-            UiUtils.setImmersiveMode(window, resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            WindowCompat.getInsetsController(window, window.decorView)
+                .setImmersiveMode(window,
+                    resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+                )
         }
 
         // Connect activity to media session
@@ -221,12 +230,12 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.playerSlider.value = positionFloat
 
         // parse current position into text
-        val microseconds = TimeUtils.convertMillisecondsToMicroseconds(position)
-        val minutes = TimeUtils.convertMicrosecondsToMinutes(microseconds)
-        val seconds = TimeUtils.convertMicrosecondsToSeconds(microseconds)
+        val microseconds = position.convertMsToUs()
+        val minutes = microseconds.convertUsToMins()
+        val seconds = microseconds.convertUsToSecs()
 
         if (microseconds >= 360) {
-            val hours = TimeUtils.convertMicrosecondsToHours(microseconds)
+            val hours = microseconds.convertUsToHrs()
             binding.playerSeekPosition.text = getString(R.string.player_seek_format_hrs, hours, minutes, String.format("%1$02d", seconds))
         } else {
             binding.playerSeekPosition.text = getString(R.string.player_seek_format, minutes, String.format("%1$02d", seconds))
@@ -287,7 +296,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                             // cache directory so that it can be played without permission issues.
                             if (preferences.getBoolean("non_persistent_playback", true)) {
                                 Log.w(TAG, "Uri $it does not have persistence, making it persistent")
-                                item = MediaItem.fromUri(MediaUtils.generateMediaPersistence(this, it))
+                                item = MediaItem.fromUri(it.generateMediaPersistence(this))
                             } else {
                                 Log.e(TAG, "Uri $it is non-persistent, but non-persistence playback is disabled. Exit!")
                                 Toast.makeText(this, R.string.player_non_persistence_disabled, Toast.LENGTH_LONG).show()
@@ -318,7 +327,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
 
         Log.i(TAG, "Cleaning up audio persistence")
-        MediaUtils.cleanMediaPersists(this)
+        cleanMediaPersists()
     }
 
     private fun startDurationLoopHandler() {
