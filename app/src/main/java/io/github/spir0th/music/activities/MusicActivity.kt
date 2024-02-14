@@ -156,6 +156,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         super.onMediaMetadataChanged(mediaMetadata)
         updateMetadataUI(mediaMetadata)
+        updateCoverArtUI()
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -178,8 +179,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun updateMetadataUI(metadata: MediaMetadata = mediaController?.mediaMetadata ?: MediaMetadata.EMPTY) {
-        updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
-
         if (metadata.title?.isNotEmpty() == true) {
             binding.playerTitle.text = metadata.title
         } else if (mediaController?.currentMediaItem?.localConfiguration?.uri != null) {
@@ -190,11 +189,15 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
         if (metadata.artist?.isNotEmpty() == true) {
             binding.playerCaption.text = metadata.artist
+        } else {
+            binding.playerCaption.text = binding.playerTitle.text
+            binding.playerTitle.text = String()
         }
     }
 
-    private fun updateCoverArtUI(artworkData: ByteArray = mediaController?.mediaMetadata?.artworkData ?: byteArrayOf(1)) {
-        val bitmap = BitmapFactory.decodeByteArray(artworkData, 0, artworkData.size)
+    private fun updateCoverArtUI() {
+        val data = mediaController?.mediaMetadata?.artworkData ?: byteArrayOf(1)
+        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
 
         if (bitmap != null) {
             Glide.with(this)
@@ -202,9 +205,9 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                 .transition(withCrossFade())
                 .into(binding.playerCoverArt)
 
-            toggleCoverArt(true)
+            binding.playerCoverArt.visibility = View.VISIBLE
         } else {
-            toggleCoverArt(false)
+            binding.playerCoverArt.visibility = View.GONE
         }
     }
 
@@ -270,6 +273,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
         Log.i(TAG, "Started update from service if loaded")
         updateMetadataUI()
+        updateCoverArtUI()
         updatePlaybackStateUI()
         updatePlaybackSkipUI()
         updatePlaybackDurationUI()
@@ -335,56 +339,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     private fun stopDurationLoopHandler() {
         durationLoopRunnable?.let { durationLoopHandler?.removeCallbacks(it) }
-    }
-
-    private fun toggleCoverArt(show: Boolean) {
-        if (show) {
-            binding.playerCoverArt.visibility = View.VISIBLE
-        } else {
-            binding.playerCoverArt.visibility = View.GONE
-        }
-    }
-
-    private fun toggleCaption(show: Boolean) {
-        if (show) {
-            binding.playerCaption.visibility = View.VISIBLE
-        } else {
-            binding.playerCaption.visibility = View.GONE
-        }
-    }
-
-    @Deprecated("This is no longer being used.")
-    private fun toggleMetadata(show: Boolean, applyTo: Int = -1) {
-        // "applyTo" is an integer with the value of -1, 0, or 1
-        // The following integer is equivalent to:
-        //      -1 = Applies to both title and caption
-        //      0 = Only applies to title
-        //      1 = Only applies to caption
-        when (applyTo) {
-            -1 -> {
-                if (show) {
-                    binding.playerTitle.visibility = View.VISIBLE
-                    binding.playerCaption.visibility = View.VISIBLE
-                } else {
-                    binding.playerTitle.visibility = View.GONE
-                    binding.playerCaption.visibility = View.GONE
-                }
-            }
-            0 -> {
-                if (show) {
-                    binding.playerTitle.visibility = View.VISIBLE
-                } else {
-                    binding.playerTitle.visibility = View.GONE
-                }
-            }
-            1 -> {
-                if (show) {
-                    binding.playerCaption.visibility = View.VISIBLE
-                } else {
-                    binding.playerCaption.visibility = View.GONE
-                }
-            }
-        }
     }
 
     companion object {
