@@ -56,6 +56,9 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.root.adjustForSystemBarInsets(top=true, bottom=true)
         setContentView(binding.root)
 
+        // Make player title's marquee text effect work
+        binding.playerTitle.isSelected = true
+
         // Register listeners for activity callbacks / player controls
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -176,21 +179,17 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     private fun updateMetadataUI(metadata: MediaMetadata = mediaController?.mediaMetadata ?: MediaMetadata.EMPTY) {
         updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
-        toggleMetadata(false)
 
         if (metadata.title?.isNotEmpty() == true) {
             binding.playerTitle.text = metadata.title
-            toggleMetadata(true, 0)
         } else if (mediaController?.currentMediaItem?.localConfiguration?.uri != null) {
             // if metadata title is unavailable, we use Uri.lastPathSegment instead
             // or use the app name and author if getTitleFromUri is also unavailable
             val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
             binding.playerTitle.text = uri?.lastPathSegment
-            toggleMetadata(true, 0)
         }
         if (metadata.artist?.isNotEmpty() == true) {
             binding.playerCaption.text = metadata.artist
-            toggleMetadata(true, 1)
         }
     }
 
@@ -346,6 +345,15 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    private fun toggleCaption(show: Boolean) {
+        if (show) {
+            binding.playerCaption.visibility = View.VISIBLE
+        } else {
+            binding.playerCaption.visibility = View.GONE
+        }
+    }
+
+    @Deprecated("This is no longer being used.")
     private fun toggleMetadata(show: Boolean, applyTo: Int = -1) {
         // "applyTo" is an integer with the value of -1, 0, or 1
         // The following integer is equivalent to:
