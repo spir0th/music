@@ -42,8 +42,8 @@ import io.github.spir0th.music.utils.setImmersiveMode
 class MusicActivity : AppCompatActivity(), Player.Listener {
     private lateinit var binding: ActivityMusicBinding
     private lateinit var preferences: SharedPreferences
-    private val durationLoopHandler: Handler? = Looper.myLooper()?.let { Handler(it) }
-    private var durationLoopRunnable: Runnable? = null
+    private val loopHandler: Handler? = Looper.myLooper()?.let { Handler(it) }
+    private var loopRunnable: Runnable? = null
     private var mediaController: MediaController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,11 +94,11 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
         binding.playerSlider.addOnSliderTouchListener(object: Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
-                stopDurationLoopHandler()
+                stopLoopHandler()
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                startDurationLoopHandler()
+                startLoopHandler()
                 val milliseconds = ((slider.value + 0.0) * mediaController!!.duration).toLong()
                 Log.i(TAG, "Player slider value moved from ${mediaController?.currentPosition}ms to ${milliseconds}ms")
                 mediaController?.seekTo(milliseconds)
@@ -258,9 +258,9 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             R.drawable.baseline_play_arrow_24
         }
         if (isPlaying) {
-            startDurationLoopHandler()
+            startLoopHandler()
         } else {
-            stopDurationLoopHandler()
+            stopLoopHandler()
         }
 
         Glide.with(this@MusicActivity).load(drawable).into(binding.playerPlayback)
@@ -326,19 +326,19 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         cleanMediaPersists()
     }
 
-    private fun startDurationLoopHandler() {
+    private fun startLoopHandler() {
         val delayMs = preferences.getString("time_get_duration", "0")!!.toLong()
 
-        durationLoopRunnable = Runnable {
+        loopRunnable = Runnable {
             updatePlaybackDurationUI()
-            durationLoopRunnable?.let { durationLoopHandler?.postDelayed(it, delayMs) }
+            loopRunnable?.let { loopHandler?.postDelayed(it, delayMs) }
         }
 
-        durationLoopRunnable?.let { durationLoopHandler?.post(it) }
+        loopRunnable?.let { loopHandler?.post(it) }
     }
 
-    private fun stopDurationLoopHandler() {
-        durationLoopRunnable?.let { durationLoopHandler?.removeCallbacks(it) }
+    private fun stopLoopHandler() {
+        loopRunnable?.let { loopHandler?.removeCallbacks(it) }
     }
 
     companion object {
