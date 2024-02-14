@@ -308,7 +308,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                             mediaController?.seekTo(mediaController!!.mediaItemCount - 1, 0)
                             mediaController?.play()
                         } else {
-                            Log.w(TAG, "Incoming intent data received but is already added into queue.")
+                            Log.w(TAG, "Incoming intent data received but it's currently playing, aborting.")
                             if (mediaController?.isPlaying == false) mediaController?.play() else 0
                         }
                     }
