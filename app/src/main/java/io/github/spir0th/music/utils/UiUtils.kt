@@ -1,14 +1,12 @@
 package io.github.spir0th.music.utils
 
 import android.view.View
-import android.view.Window
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
 
-fun WindowInsetsControllerCompat.setImmersiveMode(window: Window, toggle: Boolean) {
+fun WindowInsetsControllerCompat.setImmersiveMode(toggle: Boolean) {
     if (toggle) {
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         hide(WindowInsetsCompat.Type.systemBars())
