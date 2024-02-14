@@ -176,22 +176,21 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     private fun updateMetadataUI(metadata: MediaMetadata = mediaController?.mediaMetadata ?: MediaMetadata.EMPTY) {
         updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
-        toggleMetadata(true)
+        toggleMetadata(false)
 
         if (metadata.title?.isNotEmpty() == true) {
             binding.playerTitle.text = metadata.title
+            toggleMetadata(true, 0)
         } else if (mediaController?.currentMediaItem?.localConfiguration?.uri != null) {
             // if metadata title is unavailable, we use Uri.lastPathSegment instead
             // or use the app name and author if getTitleFromUri is also unavailable
             val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
             binding.playerTitle.text = uri?.lastPathSegment
-        } else {
-            toggleMetadata(false, 0)
+            toggleMetadata(true, 0)
         }
         if (metadata.artist?.isNotEmpty() == true) {
             binding.playerCaption.text = metadata.artist
-        } else {
-            toggleMetadata(false, 1)
+            toggleMetadata(true, 1)
         }
     }
 
