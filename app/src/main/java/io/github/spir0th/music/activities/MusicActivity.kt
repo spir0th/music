@@ -174,12 +174,12 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         updatePlaybackDurationUI(newPosition.positionMs)
     }
 
-    private fun updateMetadataUI(metadata: MediaMetadata? = mediaController?.mediaMetadata) {
+    private fun updateMetadataUI(metadata: MediaMetadata = mediaController?.mediaMetadata ?: MediaMetadata.EMPTY) {
         updateCoverArtUI() // Fetch cover art, visibility will be handled by this function.
         toggleMetadata(true)
 
-        if (!metadata?.title.isNullOrEmpty()) {
-            binding.playerTitle.text = metadata?.title
+        if (metadata.title?.isNotEmpty() == true) {
+            binding.playerTitle.text = metadata.title
         } else if (mediaController?.currentMediaItem?.localConfiguration?.uri != null) {
             // if metadata title is unavailable, we use Uri.lastPathSegment instead
             // or use the app name and author if getTitleFromUri is also unavailable
@@ -188,20 +188,16 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         } else {
             toggleMetadata(false, 0)
         }
-        if (!metadata?.artist.isNullOrEmpty()) {
-            binding.playerCaption.text = metadata?.artist
+        if (metadata.artist?.isNotEmpty() == true) {
+            binding.playerCaption.text = metadata.artist
         } else {
             toggleMetadata(false, 1)
         }
     }
 
-    private fun updateCoverArtUI(artworkData: ByteArray? = mediaController?.mediaMetadata?.artworkData) {
-        val bitmap = try {
-            BitmapFactory.decodeByteArray(artworkData, 0, artworkData!!.size)
-        } catch (_: NullPointerException) {
-            val emptyByteArray = byteArrayOf(1)
-            BitmapFactory.decodeByteArray(emptyByteArray, 0, emptyByteArray.size)
-        }
+    private fun updateCoverArtUI(artworkData: ByteArray = mediaController?.mediaMetadata?.artworkData ?: byteArrayOf(1)) {
+        val bitmap = BitmapFactory.decodeByteArray(artworkData, 0, artworkData.size)
+
         if (bitmap != null) {
             Glide.with(this)
                 .load(bitmap)
@@ -214,10 +210,10 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
-    private fun updatePlaybackDurationUI(position: Long? = mediaController?.currentPosition) {
+    private fun updatePlaybackDurationUI(position: Long = mediaController?.currentPosition ?: 0) {
         // parse current position into float (pain)
-        val duration = mediaController?.duration!!
-        var positionFloat = position?.plus(0.0f)?.div(duration)!!
+        val duration = mediaController?.duration ?: 0
+        var positionFloat = (position + 0.0f) / duration
 
         if (positionFloat > 1.0f) {
             positionFloat = 1.0f
