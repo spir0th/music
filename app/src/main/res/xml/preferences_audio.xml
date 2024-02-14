@@ -20,6 +20,15 @@
             app:title="@string/prefs_audio_playback_time_get_duration" />
     </PreferenceCategory>
     <PreferenceCategory
+        app:title="@string/prefs_audio_provider">
+
+        <CheckBoxPreference
+            app:key="metadata"
+            app:defaultValue="true"
+            app:title="@string/prefs_audio_provider_metadata_fetching"
+            app:summary="@string/prefs_audio_provider_metadata_fetching_s" />
+    </PreferenceCategory>
+    <PreferenceCategory
         app:title="@string/prefs_audio_persistence">
 
         <SwitchPreferenceCompat

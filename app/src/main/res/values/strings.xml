@@ -83,6 +83,9 @@
     <string name="prefs_audio_playback_audio_focus">Audio focus</string>
     <string name="prefs_audio_playback_audio_focus_s">Prevent audio playback from simultaneously playing with other apps</string>
     <string name="prefs_audio_playback_time_get_duration">Time to get duration</string>
+    <string name="prefs_audio_provider">Provider</string>
+    <string name="prefs_audio_provider_metadata_fetching">Metadata fetching</string>
+    <string name="prefs_audio_provider_metadata_fetching_s">When enabled, metadata will be used to display player information instead of filename</string>
     <string name="prefs_audio_persistence">Persistence</string>
     <string name="prefs_audio_persistence_non_persistent_playback">Non-persistent playback</string>
     <string name="prefs_audio_persistence_non_persistent_playback_s_off">The application will no longer handle non-persistent audio.</string>

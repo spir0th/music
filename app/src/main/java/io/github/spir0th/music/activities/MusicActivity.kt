@@ -156,7 +156,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
         super.onMediaMetadataChanged(mediaMetadata)
         updateMetadataUI(mediaMetadata)
-        updateCoverArtUI()
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -179,7 +178,20 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun updateMetadataUI(metadata: MediaMetadata = mediaController?.mediaMetadata ?: MediaMetadata.EMPTY) {
-        if (metadata.title?.isNotEmpty() == true) {
+        val artworkData = metadata.artworkData ?: byteArrayOf(1)
+        val artworkBitmap = BitmapFactory.decodeByteArray(artworkData, 0, artworkData.size)
+
+        if (preferences.getBoolean("metadata", true) && artworkBitmap != null) {
+            Glide.with(this)
+                .load(artworkBitmap)
+                .transition(withCrossFade())
+                .into(binding.playerCoverArt)
+
+            binding.playerCoverArt.visibility = View.VISIBLE
+        } else {
+            binding.playerCoverArt.visibility = View.GONE
+        }
+        if (preferences.getBoolean("metadata", true) && metadata.title?.isNotEmpty() == true) {
             binding.playerTitle.text = metadata.title
         } else if (mediaController?.currentMediaItem?.localConfiguration?.uri != null) {
             // if metadata title is unavailable, we use Uri.lastPathSegment instead
@@ -187,27 +199,11 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             val uri = mediaController?.currentMediaItem?.localConfiguration?.uri
             binding.playerTitle.text = uri?.lastPathSegment
         }
-        if (metadata.artist?.isNotEmpty() == true) {
+        if (preferences.getBoolean("metadata", true) && metadata.artist?.isNotEmpty() == true) {
             binding.playerCaption.text = metadata.artist
         } else {
             binding.playerCaption.text = binding.playerTitle.text
             binding.playerTitle.text = String()
-        }
-    }
-
-    private fun updateCoverArtUI() {
-        val data = mediaController?.mediaMetadata?.artworkData ?: byteArrayOf(1)
-        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-
-        if (bitmap != null) {
-            Glide.with(this)
-                .load(bitmap)
-                .transition(withCrossFade())
-                .into(binding.playerCoverArt)
-
-            binding.playerCoverArt.visibility = View.VISIBLE
-        } else {
-            binding.playerCoverArt.visibility = View.GONE
         }
     }
 
@@ -273,7 +269,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
         Log.i(TAG, "Started update from service if loaded")
         updateMetadataUI()
-        updateCoverArtUI()
         updatePlaybackStateUI()
         updatePlaybackSkipUI()
         updatePlaybackDurationUI()
