@@ -1,25 +1,21 @@
 package io.github.spir0th.music.fragments
 
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.spir0th.music.BuildConfig
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
 
 class AboutFragment : PreferenceFragmentCompat() {
-    private lateinit var preferences: SharedPreferences
     private var nameClickCount = 0
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_about, rootKey)
-        preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         parsePreferenceStringPlaceholders()
 
         val github = findPreference<Preference>("github")
@@ -34,18 +30,24 @@ class AboutFragment : PreferenceFragmentCompat() {
             nameClickCount += 1
 
             if (nameClickCount >= 5) {
-                if (!preferences.getBoolean("experiments", false)) {
+                val activity = requireActivity() as SettingsActivity
+
+                if (!activity.areExperimentsEnabled()) {
                     Toast.makeText(requireContext(), R.string.prefs_about_experiments_enabled, Toast.LENGTH_LONG).show()
-                    preferences.edit().putBoolean("experiments", true).apply()
-                    (requireActivity() as SettingsActivity).restartApplication()
+                    activity.toggleExperiments(true)
+
+                    // doing some hacky stuff, since the Preferences API doesn't have a way
+                    // to trigger the fragment change in code (only in XML)
+                    it.fragment = "io.github.spir0th.music.fragments.ExperimentalSettingsFragment"
+                    onPreferenceTreeClick(it)
                 } else {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.dialog_disable_experimental_features_title)
                         .setMessage(R.string.dialog_disable_experimental_features_message)
                         .setPositiveButton(R.string.dialog_disable_experimental_features_positive) { _, _ ->
                             Toast.makeText(requireContext(), R.string.prefs_about_experiments_disabled, Toast.LENGTH_LONG).show()
-                            preferences.edit().putBoolean("experiments", false).apply()
-                            (requireActivity() as SettingsActivity).restartApplication()
+                            activity.toggleExperiments(false)
+                            activity.restartApplication()
                         }
                         .setNegativeButton(R.string.dialog_disable_experimental_features_negative) { _, _ -> }
                         .setCancelable(false)
