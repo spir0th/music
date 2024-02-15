@@ -3,14 +3,17 @@ package io.github.spir0th.music.services
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.preference.PreferenceManager
+import com.google.common.util.concurrent.ListenableFuture
 import io.github.spir0th.music.activities.MusicActivity
 
-class PlaybackService : MediaSessionService() {
+class PlaybackService : MediaSessionService(), MediaSession.Callback {
     private lateinit var preferences: SharedPreferences
     private var mediaSession: MediaSession? = null
     override fun onCreate() {
@@ -23,6 +26,7 @@ class PlaybackService : MediaSessionService() {
             .build()
         mediaSession = MediaSession.Builder(this, player)
             .setSessionActivity(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
+            .setCallback(this)
             .build()
 
         mediaSession?.player?.playWhenReady = true
@@ -47,5 +51,17 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
+    @UnstableApi
+    override fun onPlaybackResumption(
+        mediaSession: MediaSession,
+        controller: MediaSession.ControllerInfo
+    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+        return super.onPlaybackResumption(mediaSession, controller)
+    }
+
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
+
+    companion object {
+        const val TAG = "PlaybackService"
+    }
 }
