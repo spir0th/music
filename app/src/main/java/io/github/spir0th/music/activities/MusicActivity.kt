@@ -141,9 +141,9 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
         if (!preferences.getBoolean("background_playback", true) &&
             (getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive) {
-            // If background playback is disabled, then pause when user goes off the activity
+            // If background playback is disabled, then clear everything when user goes off the activity
             // except if onStop is called because screen is turned off, then don't do it.
-            mediaController?.pause()
+            mediaController?.clearMediaItems()
         }
 
         // Remove player listeners and disconnect from activity
