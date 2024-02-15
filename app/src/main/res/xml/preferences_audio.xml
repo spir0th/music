@@ -6,7 +6,6 @@
 
         <CheckBoxPreference
             app:key="background_playback"
-            app:defaultValue="true"
             app:title="@string/prefs_audio_playback_background"
             app:summary="@string/prefs_audio_playback_background_s" />
         <CheckBoxPreference
