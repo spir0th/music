@@ -1,6 +1,7 @@
 package io.github.spir0th.music.activities
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -137,8 +139,10 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     override fun onStop() {
         super.onStop()
 
-        if (!preferences.getBoolean("background_playback", true)) {
+        if (!preferences.getBoolean("background_playback", true) &&
+            (getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive) {
             // If background playback is disabled, then pause when user goes off the activity
+            // except if onStop is called because screen is turned off, then don't do it.
             mediaController?.pause()
         }
 
