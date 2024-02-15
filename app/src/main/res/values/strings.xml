@@ -126,10 +126,6 @@
     <string name="dialog_clean_persistence_message">Cleaning them right now needs the application to be restarted.</string>
     <string name="dialog_clean_persistence_positive">Yes</string>
     <string name="dialog_clean_persistence_negative">No</string>
-    <string name="dialog_audio_focus_restart_title">@string/dialog_restart_optional_title</string>
-    <string name="dialog_audio_focus_restart_message">Toggling audio focus requires a restart to take effect, do it now?</string>
-    <string name="dialog_audio_focus_restart_positive">@string/dialog_restart_optional_positive</string>
-    <string name="dialog_audio_focus_restart_negative">@string/dialog_restart_optional_negative</string>
     <string name="dialog_disable_experimental_features_title">Disable experimental features?</string>
     <string name="dialog_disable_experimental_features_message">If you disable it, you will lose access to the god-tier menu!</string>
     <string name="dialog_disable_experimental_features_positive">Yes</string>
