@@ -13,7 +13,6 @@ import androidx.preference.PreferenceManager
 import com.jakewharton.processphoenix.ProcessPhoenix
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivitySettingsBinding
-import io.github.spir0th.music.fragments.ExperimentalSettingsFragment
 import io.github.spir0th.music.fragments.SettingsFragment
 import io.github.spir0th.music.utils.adjustForSystemBarInsets
 import java.lang.ClassCastException
