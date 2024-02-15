@@ -22,6 +22,14 @@
             android:targetClass="io.github.spir0th.music.activities.DeviceInfoActivity" />
     </Preference>
     <Preference
+        app:key="settings_editor"
+        app:title="@string/prefs_experimental_settings_editor">
+
+        <intent
+            android:targetPackage="io.github.spir0th.music"
+            android:targetClass="io.github.spir0th.music.activities.SettingsEditorActivity" />
+    </Preference>
+    <Preference
         app:key="force_restart"
         app:title="@string/prefs_experimental_force_restart" />
 </PreferenceScreen>

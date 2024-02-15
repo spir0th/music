@@ -6,6 +6,7 @@
     <string name="content_desc_player_skip_previous">Skip to previous media</string>
     <string name="content_desc_player_playback">Play or pause media</string>
     <string name="content_desc_player_skip_next">Skip to next media if available</string>
+    <string name="content_desc_settings_editor_add">Add a new preference item</string>
     <!-- Player strings -->
     <string name="player_seek_reset">0:00</string>
     <string name="player_seek_format">%1$d:%2$s</string>
@@ -60,6 +61,14 @@
     <string name="service_info_connect_session_success">Connection to service session successful</string>
     <string name="service_info_disconnect_session">Disconnect session</string>
     <string name="service_info_disconnect_session_success">Disconnected from service session</string>
+    <!-- Preference editor settings -->
+    <string name="prefs_editor_title">Settings editor</string>
+    <string name="prefs_editor_create_item_title">Create preference item</string>
+    <string name="prefs_editor_create_item_key_hint">Key</string>
+    <string name="prefs_editor_delete_item_title">Delete preference item</string>
+    <string name="prefs_editor_delete_item_message">Are you sure you want to delete %1$s?</string>
+    <string name="prefs_editor_delete_item_positive">Yes</string>
+    <string name="prefs_editor_delete_item_negative">No</string>
     <!-- Preference strings -->
     <string name="settings_title">Settings</string>
     <string name="settings_restart">This setting requires a restart to take effect.</string>
@@ -109,6 +118,7 @@
     <string name="prefs_experimental_logs_empty">There are no saved logs yet.</string>
     <string name="prefs_experimental_service_info">Playback service info</string>
     <string name="prefs_experimental_device_info">Device information</string>
+    <string name="prefs_experimental_settings_editor">Preferences editor</string>
     <string name="prefs_experimental_force_restart">Force reboot</string>
     <!-- Dialog strings -->
     <string name="dialog_restart_title">Do you want to restart?</string>
@@ -137,6 +147,8 @@
     <string name="dialog_create_media_item_title">Create a new media item</string>
     <string name="dialog_create_media_item_positive">Add</string>
     <string name="dialog_create_media_item_negative">Cancel</string>
+    <string name="dialog_settings_edit_positive">OK</string>
+    <string name="dialog_settings_edit_negative">Cancel</string>
     <string name="dialog_logs_title">Logs</string>
     <string name="dialog_logs_neutral">Clear</string>
     <string name="dialog_logs_negative">Close</string>
