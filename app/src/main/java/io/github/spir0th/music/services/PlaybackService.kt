@@ -17,12 +17,15 @@ class PlaybackService : MediaSessionService() {
         super.onCreate()
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val intent = Intent(this, MusicActivity::class.java)
+
         val player = ExoPlayer.Builder(this)
             .setAudioAttributes(AudioAttributes.DEFAULT, preferences.getBoolean("audio_focus", true))
             .build()
         mediaSession = MediaSession.Builder(this, player)
             .setSessionActivity(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .build()
+
+        mediaSession?.player?.playWhenReady = true
     }
 
     override fun onDestroy() {
