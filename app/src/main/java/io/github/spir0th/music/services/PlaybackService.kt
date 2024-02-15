@@ -3,7 +3,6 @@ package io.github.spir0th.music.services
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -60,8 +59,4 @@ class PlaybackService : MediaSessionService(), MediaSession.Callback {
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
-
-    companion object {
-        const val TAG = "PlaybackService"
-    }
 }
