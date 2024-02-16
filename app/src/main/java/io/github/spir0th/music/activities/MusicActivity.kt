@@ -1,7 +1,6 @@
 package io.github.spir0th.music.activities
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -9,13 +8,13 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PowerManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.hardware.display.DisplayManagerCompat
 import androidx.core.view.WindowCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -39,6 +38,7 @@ import io.github.spir0th.music.utils.convertUsToMins
 import io.github.spir0th.music.utils.convertUsToSecs
 import io.github.spir0th.music.utils.cleanMediaPersists
 import io.github.spir0th.music.utils.generateMediaPersistence
+import io.github.spir0th.music.utils.isScreenOn
 import io.github.spir0th.music.utils.setImmersiveMode
 
 class MusicActivity : AppCompatActivity(), Player.Listener {
@@ -140,7 +140,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         super.onStop()
 
         if (!preferences.getBoolean("background_playback", true) &&
-            (getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive) {
+            DisplayManagerCompat.getInstance(this).isScreenOn()) {
             // If background playback is disabled, then clear everything when user goes off the activity
             // except if onStop is called because screen is turned off, then don't do it.
             mediaController?.clearMediaItems()
