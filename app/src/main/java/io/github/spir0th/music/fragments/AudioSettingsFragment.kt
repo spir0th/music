@@ -15,7 +15,7 @@ import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
 import io.github.spir0th.music.services.PlaybackService
-import io.github.spir0th.music.utils.cleanMediaPersists
+import io.github.spir0th.music.utils.cleanPersistentUris
 
 class AudioSettingsFragment : PreferenceFragmentCompat() {
     private var mediaController: MediaController? = null
@@ -58,7 +58,7 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
                 .setMessage(R.string.dialog_clean_persistence_message)
                 .setPositiveButton(R.string.dialog_clean_persistence_positive) { _, _ ->
                     // Clean persistent files, then restart self
-                    requireContext().cleanMediaPersists()
+                    requireContext().cleanPersistentUris()
                     (requireActivity() as SettingsActivity).restartApplication()
                 }
                 .setNegativeButton(R.string.dialog_clean_persistence_negative) { _, _ -> }

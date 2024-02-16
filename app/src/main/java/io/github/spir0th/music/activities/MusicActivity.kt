@@ -31,8 +31,8 @@ import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityMusicBinding
 import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.adjustForSystemBarInsets
-import io.github.spir0th.music.utils.cleanMediaPersists
-import io.github.spir0th.music.utils.generateMediaPersistence
+import io.github.spir0th.music.utils.cleanPersistentUris
+import io.github.spir0th.music.utils.generatePersistentUri
 import io.github.spir0th.music.utils.setImmersiveMode
 
 class MusicActivity : AppCompatActivity(), Player.Listener {
@@ -276,7 +276,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                             // cache directory so that it can be played without permission issues.
                             if (preferences.getBoolean("non_persistent_playback", true)) {
                                 Log.w(TAG, "Uri $it does not have persistence, making it persistent")
-                                item = MediaItem.fromUri(it.generateMediaPersistence(this))
+                                item = MediaItem.fromUri(generatePersistentUri(it))
                             } else {
                                 Log.e(TAG, "Uri $it is non-persistent, but non-persistence playback is disabled. Exit!")
                                 Toast.makeText(this, R.string.player_non_persistence_disabled, Toast.LENGTH_LONG).show()
@@ -307,7 +307,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
 
         Log.i(TAG, "Cleaning up audio persistence")
-        cleanMediaPersists()
+        cleanPersistentUris()
     }
 
     private fun startLoopHandler() {
