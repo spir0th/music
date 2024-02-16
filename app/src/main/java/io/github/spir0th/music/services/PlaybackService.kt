@@ -10,11 +10,13 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.preference.PreferenceManager
 import com.google.common.util.concurrent.ListenableFuture
+import io.github.spir0th.music.BuildConfig
 import io.github.spir0th.music.activities.MusicActivity
 
 class PlaybackService : MediaSessionService(), MediaSession.Callback {
     private lateinit var preferences: SharedPreferences
     private var mediaSession: MediaSession? = null
+
     override fun onCreate() {
         super.onCreate()
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -48,6 +50,17 @@ class PlaybackService : MediaSessionService(), MediaSession.Callback {
         if (!player.playWhenReady || player.mediaItemCount == 0) {
             stopSelf()
         }
+    }
+
+    override fun onConnect(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo
+    ): MediaSession.ConnectionResult {
+        if (controller.packageName != BuildConfig.APPLICATION_ID) {
+            return MediaSession.ConnectionResult.reject()
+        }
+
+        return super.onConnect(session, controller)
     }
 
     @UnstableApi
