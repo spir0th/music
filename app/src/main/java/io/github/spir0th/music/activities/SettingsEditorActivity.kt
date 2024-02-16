@@ -17,7 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivitySettingsEditorBinding
 import io.github.spir0th.music.databinding.ViewholderRowSettingBinding
-import io.github.spir0th.music.utils.adjustForSystemBarInsets
+import io.github.spir0th.music.utils.adjustMarginsForSystemBarInsets
+import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
 
 class SettingsEditorActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsEditorBinding
@@ -28,7 +29,8 @@ class SettingsEditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
         binding = ActivitySettingsEditorBinding.inflate(layoutInflater)
-        binding.toolbar.adjustForSystemBarInsets(top=true)
+        binding.toolbar.adjustPaddingForSystemBarInsets(top=true)
+        binding.settingsCreateItem.adjustMarginsForSystemBarInsets(bottom=true)
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)

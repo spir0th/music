@@ -30,7 +30,7 @@ import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityMusicBinding
 import io.github.spir0th.music.services.PlaybackService
-import io.github.spir0th.music.utils.adjustForSystemBarInsets
+import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
 import io.github.spir0th.music.utils.cleanPersistentUris
 import io.github.spir0th.music.utils.generatePersistentUri
 import io.github.spir0th.music.utils.setImmersiveMode
@@ -49,7 +49,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
         // Inflate activity view using ViewBinding
         binding = ActivityMusicBinding.inflate(layoutInflater)
-        binding.root.adjustForSystemBarInsets(top=true, bottom=true)
+        binding.root.adjustPaddingForSystemBarInsets(top=true, bottom=true)
         setContentView(binding.root)
 
         // Make player title's marquee text effect work

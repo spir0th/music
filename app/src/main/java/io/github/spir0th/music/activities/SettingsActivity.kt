@@ -14,7 +14,7 @@ import com.jakewharton.processphoenix.ProcessPhoenix
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivitySettingsBinding
 import io.github.spir0th.music.fragments.SettingsFragment
-import io.github.spir0th.music.utils.adjustForSystemBarInsets
+import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
 import java.lang.ClassCastException
 
 class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
-        binding.toolbar.adjustForSystemBarInsets(top=true)
+        binding.toolbar.adjustPaddingForSystemBarInsets(top=true)
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
