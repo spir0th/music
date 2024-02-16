@@ -32,10 +32,6 @@ import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityMusicBinding
 import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.adjustForSystemBarInsets
-import io.github.spir0th.music.utils.convertMsToUs
-import io.github.spir0th.music.utils.convertUsToHrs
-import io.github.spir0th.music.utils.convertUsToMins
-import io.github.spir0th.music.utils.convertUsToSecs
 import io.github.spir0th.music.utils.cleanMediaPersists
 import io.github.spir0th.music.utils.generateMediaPersistence
 import io.github.spir0th.music.utils.isScreenOn
@@ -81,29 +77,23 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             mediaController?.seekToNext()
         }
         binding.playerSlider.setLabelFormatter { value ->
-            // copied from updatePlaybackDurationUI
-            val milliseconds = ((value + 0.0) * mediaController!!.duration).toLong()
-            val microseconds = milliseconds.convertMsToUs()
-            val minutes = microseconds.convertUsToMins()
-            val seconds = microseconds.convertUsToSecs()
-
-            if (microseconds >= 360) {
-                val hours = microseconds.convertUsToHrs()
-                "$hours:$minutes:${String.format("%1$02d", seconds)}"
-            }
-
-            "$minutes:${String.format("%1$02d", seconds)}"
+            val duration = mediaController?.duration ?: 0
+            val valueLong = ((value + 0.0) * duration).toLong()
+            parsePlaybackDurationToString(valueLong)
         }
         binding.playerSlider.addOnSliderTouchListener(object: Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
+                binding.playerSeekPosition.visibility = View.GONE
                 stopLoopHandler()
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
+                binding.playerSeekPosition.visibility = View.VISIBLE
+                val duration = mediaController?.duration ?: 0
+                val value = ((slider.value + 0.0) * duration).toLong()
+                Log.i(TAG, "Player slider value moved from ${mediaController?.currentPosition}ms to ${value}ms")
+                mediaController?.seekTo(value)
                 startLoopHandler()
-                val milliseconds = ((slider.value + 0.0) * mediaController?.duration!!).toLong()
-                Log.i(TAG, "Player slider value moved from ${mediaController?.currentPosition}ms to ${milliseconds}ms")
-                mediaController?.seekTo(milliseconds)
             }
         })
     }
@@ -181,6 +171,19 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         updatePlaybackDurationUI(newPosition.positionMs)
     }
 
+    private fun parsePlaybackDurationToString(milliseconds: Long): String {
+        val microseconds = milliseconds / 1000
+        val minutes = microseconds / 60
+        val seconds = microseconds % 60
+
+        if (microseconds >= 360) {
+            val hours = microseconds / 360
+            return getString(R.string.player_seek_format_hrs, hours, minutes, String.format("%1$02d", seconds))
+        }
+
+        return getString(R.string.player_seek_format, minutes, String.format("%1$02d", seconds))
+    }
+
     private fun updateMetadataUI(metadata: MediaMetadata = mediaController?.mediaMetadata ?: MediaMetadata.EMPTY) {
         val artworkData = metadata.artworkData ?: byteArrayOf(1)
         val artworkBitmap = BitmapFactory.decodeByteArray(artworkData, 0, artworkData.size)
@@ -212,9 +215,8 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun updatePlaybackDurationUI(position: Long = mediaController?.currentPosition ?: 0) {
-        // parse current position into float (pain)
         val duration = mediaController?.duration ?: 0
-        var positionFloat = (position + 0.0f) / duration
+        var positionFloat = (position + 0.0f) / duration // convert position into float (pain)
 
         if (positionFloat > 1.0f) {
             positionFloat = 1.0f
@@ -223,18 +225,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
 
         binding.playerSlider.value = positionFloat
-
-        // parse current position into text
-        val microseconds = position.convertMsToUs()
-        val minutes = microseconds.convertUsToMins()
-        val seconds = microseconds.convertUsToSecs()
-
-        if (microseconds >= 360) {
-            val hours = microseconds.convertUsToHrs()
-            binding.playerSeekPosition.text = getString(R.string.player_seek_format_hrs, hours, minutes, String.format("%1$02d", seconds))
-        } else {
-            binding.playerSeekPosition.text = getString(R.string.player_seek_format, minutes, String.format("%1$02d", seconds))
-        }
+        binding.playerSeekPosition.text = parsePlaybackDurationToString(position)
     }
 
     private fun updatePlaybackSkipUI() {
