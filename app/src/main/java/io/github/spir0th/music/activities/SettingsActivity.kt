@@ -50,11 +50,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         preferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onStop() {
-        super.onStop()
-        onBackPressedDispatcher.onBackPressed()
-    }
-
     override fun onPreferenceStartFragment(
         caller: PreferenceFragmentCompat,
         pref: Preference

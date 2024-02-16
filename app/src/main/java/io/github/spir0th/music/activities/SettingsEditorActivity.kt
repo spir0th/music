@@ -39,7 +39,6 @@ class SettingsEditorActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@SettingsEditorActivity, SettingsActivity::class.java))
                 finish()
             }
         })

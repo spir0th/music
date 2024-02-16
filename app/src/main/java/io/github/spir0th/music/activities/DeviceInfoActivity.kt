@@ -54,7 +54,6 @@ class DeviceInfoActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@DeviceInfoActivity, SettingsActivity::class.java))
                 finish()
             }
         })

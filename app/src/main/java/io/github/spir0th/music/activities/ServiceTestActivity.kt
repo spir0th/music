@@ -42,7 +42,6 @@ class ServiceTestActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@ServiceTestActivity, SettingsActivity::class.java))
                 finish()
             }
         })
