@@ -1,6 +1,5 @@
 package io.github.spir0th.music.activities
 
-import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

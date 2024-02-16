@@ -2,7 +2,6 @@ package io.github.spir0th.music.activities
 
 import android.app.ActivityManager
 import android.content.ComponentName
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
