@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.hardware.display.DisplayManagerCompat
 import androidx.core.view.WindowCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -34,7 +33,6 @@ import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.adjustForSystemBarInsets
 import io.github.spir0th.music.utils.cleanMediaPersists
 import io.github.spir0th.music.utils.generateMediaPersistence
-import io.github.spir0th.music.utils.isScreenOn
 import io.github.spir0th.music.utils.setImmersiveMode
 
 class MusicActivity : AppCompatActivity(), Player.Listener {
