@@ -5,14 +5,15 @@
         app:title="@string/prefs_audio_playback">
 
         <CheckBoxPreference
-            app:key="background_playback"
-            app:title="@string/prefs_audio_playback_background"
-            app:summary="@string/prefs_audio_playback_background_s" />
-        <CheckBoxPreference
             app:key="audio_focus"
             app:defaultValue="true"
             app:title="@string/prefs_audio_playback_audio_focus"
             app:summary="@string/prefs_audio_playback_audio_focus_s" />
+        <CheckBoxPreference
+            app:key="stop_on_exit"
+            app:defaultValue="true"
+            app:title="@string/prefs_audio_playback_stop_on_exit"
+            app:summary="@string/prefs_audio_playback_stop_on_exit_s" />
         <EditTextPreference
             app:key="time_get_duration"
             app:defaultValue="1000"

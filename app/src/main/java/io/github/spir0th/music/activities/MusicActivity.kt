@@ -60,6 +60,11 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         // Register listeners for activity callbacks / player controls
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                if (preferences.getBoolean("stop_on_exit", true)) {
+                    // If stop playback on exit is true, then stop playback
+                    mediaController?.clearMediaItems()
+                }
+
                 finish()
             }
         })
@@ -128,15 +133,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     override fun onStop() {
         super.onStop()
-
-        if (!preferences.getBoolean("background_playback", true) &&
-            DisplayManagerCompat.getInstance(this).isScreenOn()) {
-            // If background playback is disabled, then clear everything when user goes off the activity
-            // except if onStop is called because screen is turned off, then don't do it.
-            mediaController?.clearMediaItems()
-        }
-
-        // Remove player listeners and disconnect from activity
         mediaController?.removeListener(this)
         mediaController?.release()
     }

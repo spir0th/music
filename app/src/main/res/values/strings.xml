@@ -87,10 +87,10 @@
     <string name="prefs_audio">Audio</string>
     <string name="prefs_audio_s">Change how the playback behaves</string>
     <string name="prefs_audio_playback">Playback</string>
-    <string name="prefs_audio_playback_background">Background play</string>
-    <string name="prefs_audio_playback_background_s">Audio playback will be played in background</string>
     <string name="prefs_audio_playback_audio_focus">Audio focus</string>
     <string name="prefs_audio_playback_audio_focus_s">Prevent audio playback from simultaneously playing with other apps</string>
+    <string name="prefs_audio_playback_stop_on_exit">Stop playback when exit</string>
+    <string name="prefs_audio_playback_stop_on_exit_s">Audio playback will be stopped when pressing back button in player</string>
     <string name="prefs_audio_playback_time_get_duration">Time to get duration</string>
     <string name="prefs_audio_provider">Provider</string>
     <string name="prefs_audio_provider_metadata_fetching">Metadata fetching</string>
