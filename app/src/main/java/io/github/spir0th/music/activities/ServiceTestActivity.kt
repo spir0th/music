@@ -19,7 +19,6 @@ import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityServiceTestBinding
 import io.github.spir0th.music.services.PlaybackService
-import io.github.spir0th.music.utils.adjustMarginsForSystemBarInsets
 import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
 
 class ServiceTestActivity : AppCompatActivity() {
@@ -33,7 +32,8 @@ class ServiceTestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityServiceTestBinding.inflate(layoutInflater)
         binding.toolbar.adjustPaddingForSystemBarInsets(top=true)
-        binding.buttonCenter.adjustMarginsForSystemBarInsets(left=true, right=true, bottom=true)
+        binding.scroller.adjustPaddingForSystemBarInsets(left=true, right=true)
+        binding.buttonCenter.adjustPaddingForSystemBarInsets(left=true, right=true, bottom=true)
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
