@@ -4,11 +4,13 @@
     <PreferenceCategory
         app:title="@string/prefs_appearance_app">
 
-        <SwitchPreferenceCompat
-            app:key="dynamic_colors"
-            app:defaultValue="true"
-            app:title="@string/prefs_appearance_app_dynamic_colors"
-            app:summary="@string/prefs_appearance_app_dynamic_colors_s" />
+        <ListPreference
+            app:key="theme"
+            app:defaultValue="system"
+            app:entries="@array/prefs_themes"
+            app:entryValues="@array/prefs_themes_values"
+            app:title="@string/prefs_appearance_app_theme"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory
         app:title="@string/prefs_appearance_player">

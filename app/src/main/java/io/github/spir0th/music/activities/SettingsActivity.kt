@@ -102,11 +102,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         return preferences.getBoolean("experiments", false)
     }
 
-    fun restartApplication() {
-        val intent = Intent(this, SettingsActivity::class.java)
-        ProcessPhoenix.triggerRebirth(this, intent)
-    }
-
     companion object {
         const val TAG = "SettingsActivity"
     }

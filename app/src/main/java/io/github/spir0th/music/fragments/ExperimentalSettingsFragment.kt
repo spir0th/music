@@ -7,6 +7,8 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
+import io.github.spir0th.music.utils.convert
+import io.github.spir0th.music.utils.restart
 import java.io.File
 class ExperimentalSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -47,7 +49,7 @@ class ExperimentalSettingsFragment : PreferenceFragmentCompat() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.dialog_restart_title)
                 .setPositiveButton(R.string.dialog_restart_positive) { _, _ ->
-                    (requireActivity() as SettingsActivity).restartApplication()
+                    requireActivity().application.convert().restart()
                 }
                 .setNegativeButton(R.string.dialog_restart_negative) { _, _ -> }
                 .show()

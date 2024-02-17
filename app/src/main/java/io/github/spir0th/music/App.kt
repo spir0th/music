@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
+import io.github.spir0th.music.utils.generateTraceLog
+import io.github.spir0th.music.utils.setNightMode
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -16,30 +18,13 @@ class App : Application(), Thread.UncaughtExceptionHandler {
     override fun onCreate() {
         super.onCreate()
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        Thread.setDefaultUncaughtExceptionHandler(this)
+        preferences.getString("theme", "system")?.let { setNightMode(it) }
         Log.i(TAG, "Initialized ${getString(R.string.app_name)} version ${BuildConfig.VERSION_NAME} (code ${BuildConfig.VERSION_CODE})")
-
-        if (preferences.getBoolean("dynamic_colors", true)) {
-            DynamicColors.applyToActivitiesIfAvailable(this)
-        }
+        Thread.setDefaultUncaughtExceptionHandler(this)
     }
 
     override fun uncaughtException(t: Thread, e: Throwable) {
-        Log.e(TAG, "A fatal exception has occurred in the application, generating crash log.")
-        val dateTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val logDir = File(dataDir, "logs")
-        val file = File(logDir, "crash-$dateTime.log")
-
-        apply {
-            logDir.mkdirs()
-            file.createNewFile()
-        }
-        file.printWriter().use { out ->
-            out.println(e.stackTraceToString())
-        }
-
-        Log.i(TAG, "A crash log has been generated, now exiting!")
-        exitProcess(-1)
+        generateTraceLog(e)
     }
 
     companion object {

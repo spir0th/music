@@ -16,6 +16,8 @@ import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
 import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.cleanPersistentUris
+import io.github.spir0th.music.utils.convert
+import io.github.spir0th.music.utils.restart
 
 class AudioSettingsFragment : PreferenceFragmentCompat() {
     private var mediaController: MediaController? = null
@@ -59,7 +61,7 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
                 .setPositiveButton(R.string.dialog_clean_persistence_positive) { _, _ ->
                     // Clean persistent files, then restart self
                     requireContext().cleanPersistentUris()
-                    (requireActivity() as SettingsActivity).restartApplication()
+                    requireActivity().application.convert().restart()
                 }
                 .setNegativeButton(R.string.dialog_clean_persistence_negative) { _, _ -> }
                 .show()

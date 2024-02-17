@@ -1,27 +1,20 @@
 package io.github.spir0th.music.fragments
 
 import android.os.Bundle
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
+import io.github.spir0th.music.utils.convert
+import io.github.spir0th.music.utils.setNightMode
 
 class AppearanceSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_appearance, rootKey)
-        val dynamicColors = findPreference<SwitchPreferenceCompat>("dynamic_colors")
+        val theme = findPreference<ListPreference>("theme")
 
-        dynamicColors?.setOnPreferenceChangeListener { _, _ ->
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.dialog_dynamic_colors_restart_title)
-                .setMessage(R.string.dialog_dynamic_colors_restart_message)
-                .setPositiveButton(R.string.dialog_dynamic_colors_restart_positive) { _, _ ->
-                    (requireActivity() as SettingsActivity).restartApplication() // Restart self
-                }
-                .setNegativeButton(R.string.dialog_dynamic_colors_restart_negative) { _, _ -> }
-                .show()
-
+        theme?.setOnPreferenceChangeListener { _, newValue ->
+            requireActivity().application.convert().setNightMode(newValue as String)
             true
         }
     }
