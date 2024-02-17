@@ -30,7 +30,7 @@ class SettingsEditorActivity : AppCompatActivity() {
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
         binding = ActivitySettingsEditorBinding.inflate(layoutInflater)
         binding.toolbar.adjustPaddingForSystemBarInsets(top=true)
-        binding.settingsCreateItem.adjustMarginsForSystemBarInsets(bottom=true)
+        binding.settingsCreateItem.adjustMarginsForSystemBarInsets(left=true, right=true, bottom=true)
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)

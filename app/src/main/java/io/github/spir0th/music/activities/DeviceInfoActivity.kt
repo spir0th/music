@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.spir0th.music.BuildConfig
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityDeviceInfoBinding
+import io.github.spir0th.music.utils.adjustMarginsForSystemBarInsets
 import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -45,7 +46,7 @@ class DeviceInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDeviceInfoBinding.inflate(layoutInflater)
         binding.toolbar.adjustPaddingForSystemBarInsets(top=true)
-        binding.buttonCenter.adjustPaddingForSystemBarInsets(bottom=true)
+        binding.buttonCenter.adjustMarginsForSystemBarInsets(left=true, right=true, bottom=true)
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)

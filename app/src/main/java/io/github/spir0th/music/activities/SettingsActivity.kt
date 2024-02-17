@@ -12,6 +12,7 @@ import androidx.preference.PreferenceManager
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivitySettingsBinding
 import io.github.spir0th.music.fragments.SettingsFragment
+import io.github.spir0th.music.utils.adjustMarginsForSystemBarInsets
 import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
 
 class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -24,7 +25,8 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
-        binding.toolbar.adjustPaddingForSystemBarInsets(top=true, bottom=true)
+        binding.toolbar.adjustPaddingForSystemBarInsets(top=true)
+        binding.root.adjustMarginsForSystemBarInsets(left=true, right=true, bottom=true)
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
