@@ -47,7 +47,7 @@ class AboutFragment : PreferenceFragmentCompat() {
                         .setPositiveButton(R.string.dialog_disable_experimental_features_positive) { _, _ ->
                             Toast.makeText(requireContext(), R.string.prefs_about_experiments_disabled, Toast.LENGTH_LONG).show()
                             activity.toggleExperiments(false)
-                            activity.restartApplication()
+                            activity.recreate()
                         }
                         .setNegativeButton(R.string.dialog_disable_experimental_features_negative) { _, _ -> }
                         .setCancelable(false)
