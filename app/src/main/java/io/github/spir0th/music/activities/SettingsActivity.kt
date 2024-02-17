@@ -1,20 +1,18 @@
 package io.github.spir0th.music.activities
 
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivitySettingsBinding
 import io.github.spir0th.music.fragments.SettingsFragment
-import io.github.spir0th.music.utils.adjustMarginsForSystemBarInsets
 import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
-import java.lang.ClassCastException
 
 class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var binding: ActivitySettingsBinding
