@@ -20,7 +20,6 @@ class AppearanceSettingsFragment : PreferenceFragmentCompat() {
                     (requireActivity() as SettingsActivity).restartApplication() // Restart self
                 }
                 .setNegativeButton(R.string.dialog_dynamic_colors_restart_negative) { _, _ -> }
-                .setCancelable(false)
                 .show()
 
             true

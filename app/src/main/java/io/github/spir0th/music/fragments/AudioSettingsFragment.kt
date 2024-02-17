@@ -62,7 +62,6 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
                     (requireActivity() as SettingsActivity).restartApplication()
                 }
                 .setNegativeButton(R.string.dialog_clean_persistence_negative) { _, _ -> }
-                .setCancelable(false)
                 .show()
 
             true
