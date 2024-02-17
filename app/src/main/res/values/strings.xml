@@ -149,6 +149,9 @@
     <string name="dialog_create_media_item_negative">Cancel</string>
     <string name="dialog_settings_edit_positive">OK</string>
     <string name="dialog_settings_edit_negative">Cancel</string>
+    <string name="dialog_settings_edit_alert_title">Warning</string>
+    <string name="dialog_settings_edit_alert_message">Changing values may lead the application to crash unexpectedly, use it at your own risk!</string>
+    <string name="dialog_settings_edit_alert_positive">I understand</string>
     <string name="dialog_logs_title">Logs</string>
     <string name="dialog_logs_neutral">Clear</string>
     <string name="dialog_logs_negative">Close</string>

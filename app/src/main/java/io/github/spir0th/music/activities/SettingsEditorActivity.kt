@@ -60,6 +60,12 @@ class SettingsEditorActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.dialog_settings_edit_negative) { _, _ -> }
                 .show()
         }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.dialog_settings_edit_alert_title)
+            .setMessage(R.string.dialog_settings_edit_alert_message)
+            .setPositiveButton(R.string.dialog_settings_edit_alert_positive) { _, _ -> }
+            .setCancelable(false)
+            .show()
 
         populatePreferenceList()
     }
