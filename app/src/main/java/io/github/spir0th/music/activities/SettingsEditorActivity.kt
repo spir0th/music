@@ -44,6 +44,9 @@ class SettingsEditorActivity : AppCompatActivity() {
                 finish()
             }
         })
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
         binding.settingsListReloader.setOnRefreshListener {
             populatePreferenceList()
         }
@@ -69,11 +72,6 @@ class SettingsEditorActivity : AppCompatActivity() {
             .show()
 
         populatePreferenceList()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return super.onSupportNavigateUp()
     }
 
     private fun populatePreferenceList() {

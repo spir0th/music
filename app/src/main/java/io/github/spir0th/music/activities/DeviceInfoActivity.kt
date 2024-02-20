@@ -59,6 +59,9 @@ class DeviceInfoActivity : AppCompatActivity() {
                 finish()
             }
         })
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
         binding.dumpInfo.setOnClickListener {
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
@@ -74,11 +77,6 @@ class DeviceInfoActivity : AppCompatActivity() {
         }
 
         updateInfo()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return super.onSupportNavigateUp()
     }
 
     private fun updateInfo() {

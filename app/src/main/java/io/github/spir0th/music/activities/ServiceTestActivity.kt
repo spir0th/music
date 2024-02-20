@@ -52,6 +52,9 @@ class ServiceTestActivity : AppCompatActivity() {
         }.also {
             loopHandler?.post(it)
         }
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
         binding.clearMediaItems.setOnClickListener {
             if (mediaController == null) {
                 Toast.makeText(this, R.string.service_info_clear_media_items_fail, Toast.LENGTH_LONG).show()
@@ -102,11 +105,6 @@ class ServiceTestActivity : AppCompatActivity() {
         super.onDestroy()
         loopRunnable?.let { loopHandler?.removeCallbacks(it) }
         disconnectSessionService()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return super.onSupportNavigateUp()
     }
 
     private fun updateInfo() {
