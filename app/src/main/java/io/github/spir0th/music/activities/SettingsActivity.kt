@@ -26,7 +26,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         preferences.registerOnSharedPreferenceChangeListener(this)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         binding.toolbar.adjustPaddingForSystemBarInsets(top=true)
-        binding.settings.adjustMarginsForSystemBarInsets(left=true, right=true, bottom=true)
+        binding.preference.adjustMarginsForSystemBarInsets(left=true, right=true, bottom=true)
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
@@ -38,9 +38,16 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 finish()
             }
         })
+        binding.toolbar.setNavigationOnClickListener {
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStack()
+            } else {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.settings, SettingsFragment())
+            .replace(R.id.preference, SettingsFragment())
             .commit()
     }
 
@@ -57,7 +64,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         fragment?.arguments = pref.extras
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.settings, fragment!!)
+            .replace(R.id.preference, fragment!!)
             .addToBackStack(null)
             .commit()
 
@@ -81,16 +88,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         } catch (_: ClassCastException) {}
 
         Log.i(TAG, "$key: $value")
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStack()
-        } else {
-            onBackPressedDispatcher.onBackPressed()
-        }
-
-        return super.onSupportNavigateUp()
     }
 
     fun toggleExperiments(enable: Boolean) {
