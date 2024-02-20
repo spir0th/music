@@ -30,6 +30,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/content_desc_player_cover_art" />
+
+                <View
+                    android:id="@+id/player_dim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/transition_background_dim" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/player_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:indeterminate="true" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 

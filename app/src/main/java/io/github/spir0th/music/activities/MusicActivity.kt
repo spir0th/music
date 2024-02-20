@@ -5,11 +5,13 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
+import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -146,6 +148,11 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         updateMetadataUI(mediaMetadata)
     }
 
+    override fun onIsLoadingChanged(isLoading: Boolean) {
+        super.onIsLoadingChanged(isLoading)
+        updateControlsOnLoadingUI(isLoading)
+    }
+
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
         updatePlaybackStateUI(isPlaying)
@@ -208,6 +215,18 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    private fun updateControlsOnLoadingUI(isLoading: Boolean) {
+        val background = (binding.playerDim.background as TransitionDrawable)
+
+        if (isLoading) {
+            background.startTransition(100)
+            binding.playerIndicator.visibility = View.VISIBLE
+        } else {
+            background.reverseTransition(100)
+            binding.playerIndicator.visibility = View.GONE
+        }
+    }
+
     private fun updatePlaybackDurationUI(position: Long = mediaController?.currentPosition ?: 0) {
         val duration = mediaController?.duration ?: 0
         var positionFloat = (position + 0.0f) / duration // convert position into float (pain)
@@ -266,35 +285,34 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
     private fun handleIncomingIntents() {
         when (intent?.action) {
             Intent.ACTION_VIEW -> {
-                if (intent.type?.startsWith("audio/") == true) {
-                    intent?.data?.let {
-                        var item = MediaItem.fromUri(it)
+                intent?.data?.let {
+                    var item = MediaItem.fromUri(it)
 
-                        if (intent.flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION != Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION) {
-                            // If the intent flags doesn't have FLAG_GRANT_PERSISTABLE_URI_PERMISSION set
-                            // that means the audio content will be temporary and we'll be copying it to our
-                            // cache directory so that it can be played without permission issues.
-                            if (preferences.getBoolean("non_persistent_playback", true)) {
-                                Log.w(TAG, "Uri $it does not have persistence, making it persistent")
-                                item = MediaItem.fromUri(generatePersistentUri(it))
-                            } else {
-                                Log.e(TAG, "Uri $it is non-persistent, but non-persistence playback is disabled. Exit!")
-                                Toast.makeText(this, R.string.player_non_persistence_disabled, Toast.LENGTH_LONG).show()
-                                onBackPressedDispatcher.onBackPressed()
-                                return
-                            }
-                        }
-                        if (mediaController?.currentMediaItem != item) {
-                            Log.i(TAG, "Adding audio from incoming intent data: ${item.localConfiguration?.uri}")
-                            intent?.data = null
-                            mediaController?.stop()
-                            mediaController?.addMediaItem(item)
-                            mediaController?.seekTo(mediaController!!.mediaItemCount - 1, 0)
-                            mediaController?.prepare()
+                    if (intent.flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION != Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION &&
+                        URLUtil.isFileUrl(it.toString()) || URLUtil.isContentUrl(it.toString())) {
+                        // If the intent flags doesn't have FLAG_GRANT_PERSISTABLE_URI_PERMISSION set
+                        // that means the audio content will be temporary and we'll be copying it to our
+                        // cache directory so that it can be played without permission issues.
+                        if (preferences.getBoolean("non_persistent_playback", true)) {
+                            Log.w(TAG, "Uri $it does not have persistence, making it persistent")
+                            item = MediaItem.fromUri(generatePersistentUri(it))
                         } else {
-                            Log.w(TAG, "Incoming intent data received but it's currently playing, aborting.")
-                            if (mediaController?.isPlaying == false) mediaController?.play() else 0
+                            Log.e(TAG, "Uri $it is non-persistent, but non-persistence playback is disabled. Exit!")
+                            Toast.makeText(this, R.string.player_non_persistence_disabled, Toast.LENGTH_LONG).show()
+                            onBackPressedDispatcher.onBackPressed()
+                            return
                         }
+                    }
+                    if (mediaController?.currentMediaItem != item) {
+                        Log.i(TAG, "Adding audio from incoming intent data: ${item.localConfiguration?.uri}")
+                        intent?.data = null
+                        mediaController?.stop()
+                        mediaController?.addMediaItem(item)
+                        mediaController?.seekTo(mediaController!!.mediaItemCount - 1, 0)
+                        mediaController?.prepare()
+                    } else {
+                        Log.w(TAG, "Incoming intent data received but it's currently playing, aborting.")
+                        if (mediaController?.isPlaying == false) mediaController?.play() else 0
                     }
                 }
             }
