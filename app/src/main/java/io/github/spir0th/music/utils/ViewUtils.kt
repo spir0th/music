@@ -8,6 +8,17 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 
+
+fun View.visibilityChanged(action: (View) -> Unit) {
+    this.viewTreeObserver.addOnGlobalLayoutListener {
+        val newVis: Int = this.visibility
+        if (this.tag as Int? != newVis) {
+            this.tag = this.visibility
+            action(this)
+        }
+    }
+}
+
 fun View.adjustPaddingForSystemBarInsets(left: Boolean = false,
                                   top: Boolean = false,
                                   right: Boolean = false,

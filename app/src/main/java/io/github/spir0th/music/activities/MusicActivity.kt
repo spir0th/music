@@ -36,6 +36,7 @@ import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
 import io.github.spir0th.music.utils.cleanPersistentUris
 import io.github.spir0th.music.utils.generatePersistentUri
 import io.github.spir0th.music.utils.setImmersiveMode
+import io.github.spir0th.music.utils.visibilityChanged
 
 class MusicActivity : AppCompatActivity(), Player.Listener {
     private lateinit var binding: ActivityMusicBinding
@@ -68,6 +69,22 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                 finish()
             }
         })
+        binding.playerIndicator.visibilityChanged { view ->
+            val background = (binding.playerDim.background as TransitionDrawable).apply {
+                resetTransition()
+            }
+            when (view.visibility) {
+                View.VISIBLE -> {
+                    background.startTransition(100)
+                }
+                View.GONE -> {
+                    background.reverseTransition(100)
+                }
+                View.INVISIBLE -> {
+                    // Do nothing
+                }
+            }
+        }
         binding.playerPlayback.setOnClickListener {
             if (mediaController?.isPlaying == true) {
                 mediaController!!.pause()
@@ -139,7 +156,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         super.onMediaItemTransition(mediaItem, reason)
-        binding.playerControls.visibility = View.VISIBLE
         updatePlaybackSkipUI()
     }
 
@@ -215,14 +231,10 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
-    private fun updateControlsOnLoadingUI(isLoading: Boolean) {
-        val background = (binding.playerDim.background as TransitionDrawable)
-
+    private fun updateControlsOnLoadingUI(isLoading: Boolean = mediaController?.isLoading ?: false) {
         if (isLoading) {
-            background.startTransition(100)
             binding.playerIndicator.visibility = View.VISIBLE
         } else {
-            background.reverseTransition(100)
             binding.playerIndicator.visibility = View.GONE
         }
     }
@@ -276,6 +288,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
 
         Log.i(TAG, "Started update from service if loaded")
+        updateControlsOnLoadingUI()
         updateMetadataUI()
         updatePlaybackStateUI()
         updatePlaybackSkipUI()
