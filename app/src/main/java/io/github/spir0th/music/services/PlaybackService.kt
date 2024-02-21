@@ -20,13 +20,11 @@ class PlaybackService : MediaSessionService(), MediaSession.Callback {
     override fun onCreate() {
         super.onCreate()
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val intent = Intent(this, MusicActivity::class.java)
 
         val player = ExoPlayer.Builder(this)
             .setAudioAttributes(AudioAttributes.DEFAULT, preferences.getBoolean("audio_focus", true))
             .build()
         mediaSession = MediaSession.Builder(this, player)
-            .setSessionActivity(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
             .setCallback(this)
             .build()
 
@@ -43,15 +41,6 @@ class PlaybackService : MediaSessionService(), MediaSession.Callback {
         super.onDestroy()
     }
 
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        super.onTaskRemoved(rootIntent)
-        val player = mediaSession?.player!!
-
-        if (!player.playWhenReady || player.mediaItemCount == 0) {
-            stopSelf()
-        }
-    }
-
     override fun onConnect(
         session: MediaSession,
         controller: MediaSession.ControllerInfo
@@ -61,6 +50,18 @@ class PlaybackService : MediaSessionService(), MediaSession.Callback {
         }
 
         return super.onConnect(session, controller)
+    }
+
+    override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {
+        if (session.connectedControllers.isEmpty()) {
+            stopSelf()
+        }
+
+        super.onDisconnected(session, controller)
+    }
+
+    override fun onUpdateNotification(session: MediaSession, startInForegroundRequired: Boolean) {
+        // do nothing
     }
 
     @UnstableApi

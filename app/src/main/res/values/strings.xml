@@ -11,7 +11,6 @@
     <string name="player_seek_reset">0:00</string>
     <string name="player_seek_format">%1$d:%2$s</string>
     <string name="player_seek_format_hrs">%1$d:%2$d:%3$s</string>
-    <string name="player_non_persistence_disabled">This audio file requires non-persistence playback to be enabled.</string>
     <string name="player_file_unloaded">No audio file is playing</string>
     <string name="player_file_error">An unexpected error occurred while trying to play the audio file.</string>
     <!-- Device info strings -->
@@ -88,17 +87,10 @@
     <string name="prefs_audio_playback">Playback</string>
     <string name="prefs_audio_playback_audio_focus">Audio focus</string>
     <string name="prefs_audio_playback_audio_focus_s">Prevent audio playback from simultaneously playing with other apps</string>
-    <string name="prefs_audio_playback_stop_on_exit">Stop playback when exit</string>
-    <string name="prefs_audio_playback_stop_on_exit_s">Audio playback will be stopped when pressing back button in player</string>
     <string name="prefs_audio_playback_time_get_duration">Time to get duration</string>
     <string name="prefs_audio_provider">Provider</string>
     <string name="prefs_audio_provider_metadata_fetching">Metadata fetching</string>
     <string name="prefs_audio_provider_metadata_fetching_s">When enabled, metadata will be used to display player information instead of filename</string>
-    <string name="prefs_audio_persistence">Persistence</string>
-    <string name="prefs_audio_persistence_non_persistent_playback">Non-persistent playback</string>
-    <string name="prefs_audio_persistence_non_persistent_playback_s_off">The application will no longer handle non-persistent audio.</string>
-    <string name="prefs_audio_persistence_non_persistent_playback_s_on">Don\'t disable this option unless you know what you are doing.</string>
-    <string name="prefs_audio_persistence_clean">Clean unneeded persists</string>
     <string name="prefs_about">About</string>
     <string name="prefs_about_s">See what\'s up for this application</string>
     <string name="prefs_about_name">Music</string>
@@ -123,14 +115,6 @@
     <string name="dialog_restart_title">Do you want to restart?</string>
     <string name="dialog_restart_positive">Yes</string>
     <string name="dialog_restart_negative">No</string>
-    <string name="dialog_restart_optional_title">Restart?</string>
-    <string name="dialog_restart_optional_message">Changing this setting requires a restart to take effect, do it now?</string>
-    <string name="dialog_restart_optional_positive">Sure</string>
-    <string name="dialog_restart_optional_negative">Not now</string>
-    <string name="dialog_clean_persistence_title">Delete persistent files?</string>
-    <string name="dialog_clean_persistence_message">Cleaning them right now needs the application to be restarted.</string>
-    <string name="dialog_clean_persistence_positive">Yes</string>
-    <string name="dialog_clean_persistence_negative">No</string>
     <string name="dialog_disable_experimental_features_title">Disable experimental features?</string>
     <string name="dialog_disable_experimental_features_message">If you disable it, you will lose access to the god-tier menu!</string>
     <string name="dialog_disable_experimental_features_positive">Yes</string>

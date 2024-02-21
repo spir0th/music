@@ -10,14 +10,10 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.common.util.concurrent.MoreExecutors
 import io.github.spir0th.music.R
 import io.github.spir0th.music.activities.SettingsActivity
 import io.github.spir0th.music.services.PlaybackService
-import io.github.spir0th.music.utils.cleanPersistentUris
-import io.github.spir0th.music.utils.convert
-import io.github.spir0th.music.utils.restart
 
 class AudioSettingsFragment : PreferenceFragmentCompat() {
     private var mediaController: MediaController? = null
@@ -26,7 +22,6 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences_audio, rootKey)
         val audioFocus = findPreference<CheckBoxPreference>("audio_focus")
         val timeGetDuration = findPreference<EditTextPreference>("time_get_duration")
-        val cleanPersistence = findPreference<Preference>("clean_persistence")
 
         audioFocus?.setOnPreferenceChangeListener { _, newValue ->
             mediaController?.setAudioAttributes(AudioAttributes.DEFAULT, newValue as Boolean)
@@ -51,22 +46,6 @@ class AudioSettingsFragment : PreferenceFragmentCompat() {
         }
         timeGetDuration?.setOnBindEditTextListener {
             it.inputType = InputType.TYPE_CLASS_NUMBER
-        }
-        cleanPersistence?.setOnPreferenceClickListener {
-            // This preference must ask the user first if they want to clean persistence right now
-            // because cleaning it requires a restart of the application.
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.dialog_clean_persistence_title)
-                .setMessage(R.string.dialog_clean_persistence_message)
-                .setPositiveButton(R.string.dialog_clean_persistence_positive) { _, _ ->
-                    // Clean persistent files, then restart self
-                    requireContext().cleanPersistentUris()
-                    requireActivity().application.convert().restart()
-                }
-                .setNegativeButton(R.string.dialog_clean_persistence_negative) { _, _ -> }
-                .show()
-
-            true
         }
     }
 

@@ -78,28 +78,12 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/player_skip_previous"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/content_desc_player_skip_previous"
-                        android:src="@drawable/baseline_skip_previous_24" />
-
-                    <ImageButton
                         android:id="@+id/player_playback"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/content_desc_player_playback"
                         android:src="@drawable/baseline_play_arrow_24" />
-
-                    <ImageButton
-                        android:id="@+id/player_skip_next"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/content_desc_player_skip_next"
-                        android:src="@drawable/baseline_skip_next_24" />
 
                     <com.google.android.material.slider.Slider
                         android:id="@+id/player_slider"

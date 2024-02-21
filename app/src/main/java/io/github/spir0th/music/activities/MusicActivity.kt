@@ -11,8 +11,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.webkit.URLUtil
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,8 +31,6 @@ import io.github.spir0th.music.R
 import io.github.spir0th.music.databinding.ActivityMusicBinding
 import io.github.spir0th.music.services.PlaybackService
 import io.github.spir0th.music.utils.adjustPaddingForSystemBarInsets
-import io.github.spir0th.music.utils.cleanPersistentUris
-import io.github.spir0th.music.utils.generatePersistentUri
 import io.github.spir0th.music.utils.setImmersiveMode
 import io.github.spir0th.music.utils.visibilityChanged
 
@@ -61,14 +57,19 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         // Register listeners for activity callbacks / player controls
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (preferences.getBoolean("stop_on_exit", true)) {
-                    // If stop playback on exit is true, then stop playback
-                    mediaController?.clearMediaItems()
-                }
-
                 finish()
             }
         })
+        // Toggle immersive mode if any of these checks are true
+        if (preferences.getBoolean("immersive", false)) {
+            WindowCompat.getInsetsController(window, window.decorView).setImmersiveMode(true)
+        } else if (preferences.getBoolean("immersive_on_landscape", true)) {
+            // Depend on the screen orientation instead if respective preference is ticked off
+            // Immersive mode may also not be enabled if "immersive_on_landscape" is turned off
+            WindowCompat.getInsetsController(window, window.decorView)
+                .setImmersiveMode(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        }
+        // Register player control listeners
         binding.playerIndicator.visibilityChanged { view ->
             val background = (binding.playerDim.background as TransitionDrawable).apply {
                 resetTransition()
@@ -92,12 +93,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
                 mediaController?.play()
             }
         }
-        binding.playerSkipPrevious.setOnClickListener {
-            mediaController?.seekToPrevious()
-        }
-        binding.playerSkipNext.setOnClickListener {
-            mediaController?.seekToNext()
-        }
         binding.playerSlider.setLabelFormatter { value ->
             val duration = mediaController?.duration ?: 0
             val valueLong = ((value + 0.0) * duration).toLong()
@@ -112,26 +107,10 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             override fun onStopTrackingTouch(slider: Slider) {
                 binding.playerSeekPosition.visibility = View.VISIBLE
                 val duration = mediaController?.duration ?: 0
-                val value = ((slider.value + 0.0) * duration).toLong()
-                Log.i(TAG, "Player slider value moved from ${mediaController?.currentPosition}ms to ${value}ms")
-                mediaController?.seekTo(value)
+                mediaController?.seekTo(((slider.value + 0.0) * duration).toLong())
                 startLoopHandler()
             }
         })
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // Toggle immersive mode if any of these checks are true
-        if (preferences.getBoolean("immersive", false)) {
-            WindowCompat.getInsetsController(window, window.decorView).setImmersiveMode(true)
-        } else if (preferences.getBoolean("immersive_on_landscape", true)) {
-            // Depend on the screen orientation instead if respective preference is ticked off
-            // Immersive mode may also not be enabled if "immersive_on_landscape" is turned off
-            WindowCompat.getInsetsController(window, window.decorView)
-                .setImmersiveMode(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-        }
-
         // Connect activity to media session
         val sessionToken = SessionToken(this, ComponentName(this, PlaybackService::class.java))
         val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
@@ -139,24 +118,17 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         controllerFuture.addListener({
             mediaController = controllerFuture.get()
             mediaController?.addListener(this)
-            binding.playerControls.visibility = View.VISIBLE
-            doCleanupBeforeService()
             updateFromServiceIfLoaded()
             handleIncomingIntents()
-                                     },
+        },
             MoreExecutors.directExecutor()
         )
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         mediaController?.removeListener(this)
         mediaController?.release()
-    }
-
-    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        super.onMediaItemTransition(mediaItem, reason)
-        updatePlaybackSkipUI()
     }
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
@@ -253,18 +225,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         binding.playerSeekPosition.text = parsePlaybackDurationToString(position)
     }
 
-    private fun updatePlaybackSkipUI() {
-        if (!preferences.getBoolean("dynamic_player_controls", true)) {
-            binding.playerSkipNext.visibility = View.VISIBLE
-            return
-        }
-        if (mediaController?.hasNextMediaItem() == true) {
-            binding.playerSkipNext.visibility = View.VISIBLE
-        } else {
-            binding.playerSkipNext.visibility = View.GONE
-        }
-    }
-
     private fun updatePlaybackStateUI(isPlaying: Boolean = mediaController?.isPlaying == true) {
         val drawable: Int = if (isPlaying) {
             Log.v(TAG, "PlaybackState set to STATE_PLAYING")
@@ -279,7 +239,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             stopLoopHandler()
         }
 
-        Glide.with(this@MusicActivity).load(drawable).into(binding.playerPlayback)
+        Glide.with(this).load(drawable).into(binding.playerPlayback)
     }
 
     private fun updateFromServiceIfLoaded() {
@@ -291,7 +251,6 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         updateControlsOnLoadingUI()
         updateMetadataUI()
         updatePlaybackStateUI()
-        updatePlaybackSkipUI()
         updatePlaybackDurationUI()
     }
 
@@ -299,46 +258,14 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         when (intent?.action) {
             Intent.ACTION_VIEW -> {
                 intent?.data?.let {
-                    var item = MediaItem.fromUri(it)
-
-                    if (intent.flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION != Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION &&
-                        URLUtil.isFileUrl(it.toString()) || URLUtil.isContentUrl(it.toString())) {
-                        // If the intent flags doesn't have FLAG_GRANT_PERSISTABLE_URI_PERMISSION set
-                        // that means the audio content will be temporary and we'll be copying it to our
-                        // cache directory so that it can be played without permission issues.
-                        if (preferences.getBoolean("non_persistent_playback", true)) {
-                            Log.w(TAG, "Uri $it does not have persistence, making it persistent")
-                            item = MediaItem.fromUri(generatePersistentUri(it))
-                        } else {
-                            Log.e(TAG, "Uri $it is non-persistent, but non-persistence playback is disabled. Exit!")
-                            Toast.makeText(this, R.string.player_non_persistence_disabled, Toast.LENGTH_LONG).show()
-                            onBackPressedDispatcher.onBackPressed()
-                            return
-                        }
-                    }
-                    if (mediaController?.currentMediaItem != item) {
-                        Log.i(TAG, "Adding audio from incoming intent data: ${item.localConfiguration?.uri}")
-                        intent?.data = null
-                        mediaController?.stop()
-                        mediaController?.addMediaItem(item)
-                        mediaController?.seekTo(mediaController!!.mediaItemCount - 1, 0)
-                        mediaController?.prepare()
-                    } else {
-                        Log.w(TAG, "Incoming intent data received but it's currently playing, aborting.")
-                        if (mediaController?.isPlaying == false) mediaController?.play() else 0
-                    }
+                    val item = MediaItem.fromUri(it)
+                    Log.i(TAG, "Playing URI from intent: $it")
+                    intent?.data = null
+                    mediaController?.setMediaItem(item)
+                    mediaController?.prepare()
                 }
             }
         }
-    }
-
-    private fun doCleanupBeforeService() {
-        if (mediaController?.mediaItemCount != 0) {
-            return
-        }
-
-        Log.i(TAG, "Cleaning up audio persistence")
-        cleanPersistentUris()
     }
 
     private fun startLoopHandler() {
