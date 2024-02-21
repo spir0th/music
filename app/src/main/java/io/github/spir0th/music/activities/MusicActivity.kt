@@ -138,7 +138,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
 
     override fun onIsLoadingChanged(isLoading: Boolean) {
         super.onIsLoadingChanged(isLoading)
-        updateControlsOnLoadingUI(isLoading)
+        updateIndicatorUI(isLoading)
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -203,7 +203,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
-    private fun updateControlsOnLoadingUI(isLoading: Boolean = mediaController?.isLoading ?: false) {
+    private fun updateIndicatorUI(isLoading: Boolean = mediaController?.isLoading ?: false) {
         if (isLoading) {
             binding.playerIndicator.visibility = View.VISIBLE
         } else {
@@ -248,7 +248,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
 
         Log.i(TAG, "Started update from service if loaded")
-        updateControlsOnLoadingUI()
+        updateIndicatorUI()
         updateMetadataUI()
         updatePlaybackStateUI()
         updatePlaybackDurationUI()
