@@ -100,8 +100,7 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
         binding.playerSlider.setLabelFormatter { value ->
             val duration = mediaController?.duration ?: 0
-            val valueLong = ((value + 0.0) * duration).toLong()
-            parsePlaybackDurationToString(valueLong)
+            parsePlaybackDurationToString(((value + 0.0) * duration).toLong())
         }
         binding.playerSlider.addOnSliderTouchListener(object: Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
