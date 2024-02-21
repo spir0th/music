@@ -16,11 +16,6 @@
         app:title="@string/prefs_appearance_player">
 
         <CheckBoxPreference
-            app:key="dynamic_player_controls"
-            app:defaultValue="true"
-            app:title="@string/prefs_appearance_player_dynamic_controls"
-            app:summary="@string/prefs_appearance_player_dynamic_controls_s" />
-        <CheckBoxPreference
             app:key="immersive_on_landscape"
             app:defaultValue="true"
             app:disableDependentsState="true"
