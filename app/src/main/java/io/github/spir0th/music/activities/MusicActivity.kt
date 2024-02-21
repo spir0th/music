@@ -1,5 +1,6 @@
 package io.github.spir0th.music.activities
 
+import android.animation.LayoutTransition
 import android.content.ComponentName
 import android.content.Intent
 import android.content.SharedPreferences
@@ -69,6 +70,10 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
             WindowCompat.getInsetsController(window, window.decorView)
                 .setImmersiveMode(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
         }
+        // Toggle player control transitions if true
+        if (preferences.getBoolean("transitions", true)) {
+            binding.playerControls.layoutTransition = LayoutTransition()
+        }
         // Register player control listeners
         binding.playerIndicator.visibilityChanged { view ->
             val background = (binding.playerDim.background as TransitionDrawable).apply {
@@ -100,7 +105,10 @@ class MusicActivity : AppCompatActivity(), Player.Listener {
         }
         binding.playerSlider.addOnSliderTouchListener(object: Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
-                binding.playerSeekPosition.visibility = View.GONE
+                if (preferences.getBoolean("transitions", true)) {
+                    binding.playerSeekPosition.visibility = View.GONE
+                }
+
                 stopLoopHandler()
             }
 

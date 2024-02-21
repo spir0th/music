@@ -16,6 +16,11 @@
         app:title="@string/prefs_appearance_player">
 
         <CheckBoxPreference
+            app:key="transitions"
+            app:defaultValue="true"
+            app:title="@string/prefs_appearance_player_transitions"
+            app:summary="@string/prefs_appearance_player_transitions_s" />
+        <CheckBoxPreference
             app:key="immersive_on_landscape"
             app:defaultValue="true"
             app:disableDependentsState="true"

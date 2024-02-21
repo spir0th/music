@@ -67,7 +67,6 @@
             android:id="@+id/player_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
             <ImageButton
