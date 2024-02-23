@@ -34,19 +34,19 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/clear_media_items"
+            android:id="@+id/clear_media_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/service_info_clear_media_items"
+            android:text="@string/service_info_clear_media_item"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             style="?android:attr/buttonBarButtonStyle" />
         <Button
-            android:id="@+id/create_new_item"
+            android:id="@+id/set_media_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/service_info_create_media_item"
+            android:text="@string/service_info_set_media_item"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             style="?android:attr/buttonBarButtonStyle" />
         <Button

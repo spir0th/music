@@ -55,9 +55,9 @@ class ServiceTestActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-        binding.clearMediaItems.setOnClickListener {
+        binding.clearMediaItem.setOnClickListener {
             if (mediaController == null) {
-                Toast.makeText(this, R.string.service_info_clear_media_items_fail, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.service_info_clear_media_item_fail, Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             if (mediaController?.mediaItemCount!! > 0) {
@@ -73,9 +73,9 @@ class ServiceTestActivity : AppCompatActivity() {
                 clearMediaItems()
             }
         }
-        binding.createNewItem.setOnClickListener {
+        binding.setMediaItem.setOnClickListener {
             if (mediaController == null) {
-                Toast.makeText(this, R.string.service_info_create_media_item_fail, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.service_info_set_media_item_fail, Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             val uriEditText = EditText(this).apply {
@@ -85,8 +85,8 @@ class ServiceTestActivity : AppCompatActivity() {
                 .setTitle(R.string.dialog_create_media_item_title)
                 .setView(uriEditText)
                 .setPositiveButton(R.string.dialog_create_media_item_positive) { _, _ ->
-                    mediaController!!.addMediaItem(MediaItem.fromUri(uriEditText.text.toString()))
-                    Toast.makeText(this, R.string.service_info_create_media_item_success, Toast.LENGTH_LONG).show()
+                    mediaController?.setMediaItem(MediaItem.fromUri(uriEditText.text.toString()))
+                    Toast.makeText(this, R.string.service_info_set_media_item_success, Toast.LENGTH_LONG).show()
                 }
                 .setNegativeButton(R.string.dialog_create_media_item_negative) { _, _ -> }
                 .show()
@@ -125,9 +125,8 @@ class ServiceTestActivity : AppCompatActivity() {
     }
 
     private fun clearMediaItems() {
-        val count = mediaController?.mediaItemCount
         mediaController?.clearMediaItems()
-        Toast.makeText(this, getString(R.string.service_info_clear_media_items_success, count), Toast.LENGTH_LONG).show()
+        Toast.makeText(this, R.string.service_info_clear_media_item_success, Toast.LENGTH_LONG).show()
     }
 
     private fun connectSessionService(notify: Boolean = false) {
