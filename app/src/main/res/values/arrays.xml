@@ -10,4 +10,11 @@
         <item>dark</item>
         <item>system</item>
     </string-array>
+    <string-array name="preference_types">
+        <item>Integer</item>
+        <item>String</item>
+        <item>Boolean</item>
+        <item>Long</item>
+        <item>Float</item>
+    </string-array>
 </resources>

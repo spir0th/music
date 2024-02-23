@@ -1,16 +1,23 @@
 package io.github.spir0th.music.activities
 
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,18 +58,7 @@ class SettingsEditorActivity : AppCompatActivity() {
             populatePreferenceList()
         }
         binding.settingsCreateItem.setOnClickListener {
-            val key = EditText(this).apply {
-                hint = getString(R.string.prefs_editor_create_item_key_hint)
-            }
-            AlertDialog.Builder(this)
-                .setTitle(R.string.prefs_editor_create_item_title)
-                .setView(key)
-                .setPositiveButton(R.string.dialog_settings_edit_positive) { _, _ ->
-                    preferences.edit().putString(key.text.toString(), String()).apply()
-                    populatePreferenceList()
-                }
-                .setNegativeButton(R.string.dialog_settings_edit_negative) { _, _ -> }
-                .show()
+            editPreference(null)
         }
         AlertDialog.Builder(this)
             .setTitle(R.string.dialog_settings_edit_alert_title)
@@ -72,6 +68,130 @@ class SettingsEditorActivity : AppCompatActivity() {
             .show()
 
         populatePreferenceList()
+    }
+
+    private fun editPreference(key: String?) {
+        val view = layoutInflater.inflate(R.layout.dialog_preference_editor_edit, null)
+        val keyField = view.findViewById<EditText>(R.id.preference_key)
+        val valueField = view.findViewById<EditText>(R.id.preference_value)
+        val type = view.findViewById<Spinner>(R.id.preference_type)
+        val typeInteger = 0; val typeString = 1; val typeBoolean = 2; val typeLong = 3; val typeFloat = 4
+
+        keyField.apply {
+            setText(key, TextView.BufferType.EDITABLE)
+        }
+        valueField.apply {
+            setText(key?.let { readPreference(it).toString() }, TextView.BufferType.EDITABLE)
+        }
+        type.apply {
+            val adapter = ArrayAdapter.createFromResource(this@SettingsEditorActivity, R.array.preference_types, android.R.layout.simple_spinner_item)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            this.adapter = adapter
+
+            this.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when (position) {
+                        typeInteger -> {
+                            valueField.inputType = InputType.TYPE_CLASS_NUMBER
+                        }
+                        typeString -> {
+                            valueField.inputType = InputType.TYPE_CLASS_TEXT
+                        }
+                        typeBoolean -> {
+                            valueField.inputType = InputType.TYPE_CLASS_TEXT
+                        }
+                        typeLong -> {
+                            valueField.inputType = InputType.TYPE_CLASS_NUMBER
+                        }
+                        typeFloat -> {
+                            valueField.inputType = InputType.TYPE_CLASS_TEXT
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+            if (key != null) {
+                when (readPreference(key)) {
+                    is Int -> {
+                        setSelection(adapter.getPosition("Integer"))
+                    }
+                    is String -> {
+                        setSelection(adapter.getPosition("String"))
+                    }
+                    is Boolean -> {
+                        setSelection(adapter.getPosition("Boolean"))
+                    }
+                    is Long -> {
+                        setSelection(adapter.getPosition("Long"))
+                    }
+                    is Float -> {
+                        setSelection(adapter.getPosition("Float"))
+                    }
+                }
+            }
+        }
+        AlertDialog.Builder(this)
+            .setTitle(if (key != null) R.string.prefs_editor_edit_item_title else R.string.prefs_editor_edit_item_title_alt)
+            .setView(view)
+            .setPositiveButton(R.string.dialog_settings_edit_positive) { dialog, _ ->
+                preferences.edit {
+                    if (keyField.text.isEmpty()) {
+                        Toast.makeText(this@SettingsEditorActivity, R.string.prefs_Editor_edit_item_key_empty, Toast.LENGTH_LONG).show()
+                        return@setPositiveButton
+                    }
+                    if (valueField.text.isEmpty()) {
+                        Toast.makeText(this@SettingsEditorActivity, R.string.prefs_Editor_edit_item_value_empty, Toast.LENGTH_LONG).show()
+                        return@setPositiveButton
+                    }
+                    if (key != keyField.text.toString()) {
+                        remove(key)
+                    }
+                    when (type.selectedItemPosition) {
+                        typeInteger -> {
+                            putInt(keyField.text.toString(), valueField.text.toString().toInt())
+                        }
+                        typeString -> {
+                            putString(keyField.text.toString(), valueField.text.toString())
+                        }
+                        typeBoolean -> {
+                            putBoolean(keyField.text.toString(), valueField.text.toString().toBoolean())
+                        }
+                        typeLong -> {
+                            putLong(keyField.text.toString(), valueField.text.toString().toLong())
+                        }
+                        typeFloat -> {
+                            putFloat(keyField.text.toString(), valueField.text.toString().toFloat())
+                        }
+                    }
+
+                    apply()
+                }
+
+                populatePreferenceList()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.dialog_settings_edit_negative) { _, _ -> }
+            .show()
+    }
+
+    private fun readPreference(key: String): Any? {
+        val keys = preferences.all
+
+        if (keys != null) {
+            for (entry in keys) {
+                if (entry.key == key) {
+                    return entry.value
+                }
+            }
+        }
+
+        return null
     }
 
     private fun populatePreferenceList() {
@@ -91,29 +211,7 @@ class SettingsEditorActivity : AppCompatActivity() {
         inner class ViewHolder(private val itemBinding: ViewholderRowSettingBinding) : RecyclerView.ViewHolder(itemBinding.root) {
             init {
                 itemBinding.root.setOnClickListener {
-                    val input = EditText(this@SettingsEditorActivity).apply {
-                        setText(itemBinding.value.text, TextView.BufferType.EDITABLE)
-                    }
-                    AlertDialog.Builder(this@SettingsEditorActivity)
-                        .setTitle(itemBinding.key.text)
-                        .setView(input)
-                        .setPositiveButton(R.string.dialog_settings_edit_positive) { _, _ ->
-                            val key = itemBinding.key.text.toString()
-                            val value = input.text.toString()
-                            itemBinding.value.text = input.text
-
-                            if (value.toIntOrNull() != null) {
-                                preferences.edit().putInt(key, value.toInt()).apply()
-                            } else if (value.toLongOrNull() != null) {
-                                preferences.edit().putLong(key, value.toLong()).apply()
-                            } else if (value.lowercase() == "false" || value.lowercase() == "true") {
-                                preferences.edit().putBoolean(key, value.toBoolean()).apply()
-                            } else {
-                                preferences.edit().putString(key, value).apply()
-                            }
-                        }
-                        .setNegativeButton(R.string.dialog_settings_edit_negative) { _, _ -> }
-                        .show()
+                    editPreference(itemBinding.key.text.toString())
                 }
                 itemBinding.root.setOnLongClickListener {
                     val key = itemBinding.key.text.toString()
